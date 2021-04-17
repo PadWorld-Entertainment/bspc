@@ -414,7 +414,7 @@ int AAS_BestReachableArea(vec3_t origin, vec3_t mins, vec3_t maxs, vec3_t goalor
 		} // end if
 		else {
 			// it can very well happen that the AAS_PointAreaNum function tells that
-			// a point is in an area and that starting a AAS_TraceClientBBox from that
+			// a point is in an area and that starting an AAS_TraceClientBBox from that
 			// point will return trace.startsolid qtrue
 #if 0
 			if (AAS_PointAreaNum(start))
@@ -441,7 +441,7 @@ int AAS_BestReachableArea(vec3_t origin, vec3_t mins, vec3_t maxs, vec3_t goalor
 	// VectorSubtract(absmaxs, bbmins, absmaxs);
 	// link an invalid (-1) entity
 	areas = AAS_LinkEntityClientBBox(absmins, absmaxs, -1, PRESENCE_CROUCH);
-	// get the reachable link arae
+	// get the reachable link area
 	areanum = AAS_BestReachableLinkArea(areas);
 	// unlink the invalid entity
 	AAS_UnlinkFromAreas(areas);
@@ -830,7 +830,7 @@ int AAS_Reachability_Swim(int area1num, int area2num) {
 	area1 = &aasworld.areas[area1num];
 	area2 = &aasworld.areas[area2num];
 
-	// if the areas are not near anough
+	// if the areas are not near enough
 	for (i = 0; i < 3; i++) {
 		if (area1->mins[i] > area2->maxs[i] + 10)
 			return qfalse;
@@ -903,7 +903,7 @@ int AAS_Reachability_EqualFloorHeight(int area1num, int area2num) {
 
 	area1 = &aasworld.areas[area1num];
 	area2 = &aasworld.areas[area2num];
-	// if the areas are not near anough in the x-y direction
+	// if the areas are not near enough in the x-y direction
 	for (i = 0; i < 2; i++) {
 		if (area1->mins[i] > area2->maxs[i] + 10)
 			return qfalse;
@@ -1059,7 +1059,7 @@ int AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2
 	area2 = &aasworld.areas[area2num];
 	// if the first area contains a liquid
 	area1swim = AAS_AreaSwim(area1num);
-	// if the areas are not near anough in the x-y direction
+	// if the areas are not near enough in the x-y direction
 	for (i = 0; i < 2; i++) {
 		if (area1->mins[i] > area2->maxs[i] + 10)
 			return qfalse;
@@ -1378,7 +1378,7 @@ int AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2
 		testpoint[2] -= aassettings.phys_maxwaterjump;
 		// if there IS water the sv_maxwaterjump height below the bestend point
 		if (aasworld.areasettings[AAS_PointAreaNum(testpoint)].areaflags & AREA_LIQUID) {
-			// don't create rediculous water jump reachabilities from areas very far below
+			// don't create ridiculous water jump reachabilities from areas very far below
 			// the water surface
 			if (water_bestdist < aassettings.phys_maxwaterjump + 24) {
 				// waterjumping from or towards a crouch only area is not possible in Quake2
@@ -2057,7 +2057,7 @@ int AAS_Reachability_Jump(int area1num, int area2num) {
 	// maximum height a player can jump with the given initial z velocity
 	maxjumpheight = AAS_MaxJumpHeight(phys_jumpvel);
 
-	// if the areas are not near anough in the x-y direction
+	// if the areas are not near enough in the x-y direction
 	for (i = 0; i < 2; i++) {
 		if (area1->mins[i] > area2->maxs[i] + maxjumpdistance)
 			return qfalse;
@@ -3003,7 +3003,7 @@ void AAS_Reachability_Elevator(void) {
 					bottomorg[2] += 24;
 				} // end else
 				// look at adjacent areas around the top of the plat
-				// make larger steps to outside the plat everytime
+				// make larger steps to outside the plat every time
 				for (n = 0; n < 3; n++) {
 					for (k = 0; k < 3; k++) {
 						mins[k] -= 4;

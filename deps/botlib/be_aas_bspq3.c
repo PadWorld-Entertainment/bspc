@@ -68,7 +68,7 @@ typedef struct bsp_entity_s {
 	bsp_epair_t *epairs;
 } bsp_entity_t;
 
-// id Sofware BSP data
+// id Software BSP data
 typedef struct bsp_s {
 	// true when bsp file is loaded
 	int loaded;
@@ -434,7 +434,7 @@ void AAS_DumpBSPData(void) {
 	Com_Memset(&bspworld, 0, sizeof(bspworld));
 } // end of the function AAS_DumpBSPData
 //===========================================================================
-// load an bsp file
+// load a .bsp file
 //
 // Parameter:				-
 // Returns:					-

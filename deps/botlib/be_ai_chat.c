@@ -507,10 +507,10 @@ void StringReplaceWords(char *string, char *synonym, char *replacement) {
 
 	// find the synonym in the string
 	str = StringContainsWord(string, synonym, qfalse);
-	// if the synonym occured in the string
+	// if the synonym occurred in the string
 	while (str) {
 		// if the synonym isn't part of the replacement which is already in the string
-		// usefull for abreviations
+		// useful for abbreviations
 		str2 = StringContainsWord(string, replacement, qfalse);
 		while (str2) {
 			if (str2 <= str && str < str2 + strlen(replacement))
@@ -1912,7 +1912,7 @@ bot_chat_t *BotLoadInitialChat(char *chatfile, char *chatname) {
 					return NULL;
 				} // end if
 				StripDoubleQuotes(token.string);
-				// after the chat name we expect a opening brace
+				// after the chat name we expect an opening brace
 				if (!PC_ExpectTokenString(source, "{")) {
 					FreeSource(source);
 					return NULL;
@@ -2013,7 +2013,7 @@ bot_chat_t *BotLoadInitialChat(char *chatfile, char *chatname) {
 #ifdef DEBUG
 	botimport.Print(PRT_MESSAGE, "initial chats loaded in %d msec\n", Sys_MilliSeconds() - starttime);
 #endif // DEBUG
-	// character was read succesfully
+	// character was read successfully
 	return chat;
 } // end of the function BotLoadInitialChat
 //===========================================================================

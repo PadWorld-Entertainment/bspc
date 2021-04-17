@@ -686,7 +686,7 @@ void EvolveFuzzySeperator_r(fuzzyseperator_t *fs) {
 			fs->weight += crandom() * (fs->maxweight - fs->minweight);
 		else
 			fs->weight += crandom() * (fs->maxweight - fs->minweight) * 0.5;
-		// modify bounds if necesary because of mutation
+		// modify bounds if necessary because of mutation
 		if (fs->weight < fs->minweight)
 			fs->minweight = fs->weight;
 		else if (fs->weight > fs->maxweight)

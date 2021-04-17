@@ -520,7 +520,7 @@ void BotInitLevelItems(void) {
 	if (!AAS_Loaded())
 		return;
 
-	// update the modelindexes of the item info
+	// validate the modelindexes of the item info
 	for (i = 0; i < ic->numiteminfo; i++) {
 		// ic->iteminfo[i].modelindex = AAS_IndexFromModel(ic->iteminfo[i].model);
 		if (!ic->iteminfo[i].modelindex) {
@@ -944,7 +944,7 @@ void BotUpdateEntityItems(void) {
 	// timeout current entity items if necessary
 	for (li = levelitems; li; li = nextli) {
 		nextli = li->next;
-		// if it is a item that will time out
+		// if it is an item that will time out
 		if (li->timeout) {
 			// timeout the item
 			if (li->timeout < AAS_Time()) {
