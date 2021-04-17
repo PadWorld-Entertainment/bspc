@@ -1379,7 +1379,6 @@ void BotMatchVariable(bot_match_t *match, int variable, char *buf, int size) {
 	else {
 		strcpy(buf, "");
 	} // end else
-	return;
 } // end of the function BotMatchVariable
 //===========================================================================
 //
