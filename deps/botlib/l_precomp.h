@@ -108,7 +108,7 @@ int PC_ExpectTokenType(source_t *source, int type, int subtype, token_t *token);
 int PC_ExpectAnyToken(source_t *source, token_t *token);
 // returns true when the token is available
 int PC_CheckTokenString(source_t *source, char *string);
-// returns true an reads the token when a token with the given type is available
+// returns true and reads the token when a token with the given type is available
 int PC_CheckTokenType(source_t *source, int type, int subtype, token_t *token);
 // skip tokens until the given token string is read
 int PC_SkipUntilString(source_t *source, char *string);
@@ -116,10 +116,6 @@ int PC_SkipUntilString(source_t *source, char *string);
 void PC_UnreadLastToken(source_t *source);
 // unread the given token
 void PC_UnreadToken(source_t *source, token_t *token);
-// read a token only if on the same line, lines are concatenated with a slash
-int PC_ReadLine(source_t *source, token_t *token);
-// returns true if there was a white space in front of the token
-int PC_WhiteSpaceBeforeToken(token_t *token);
 // add a define to the source
 int PC_AddDefine(source_t *source, char *string);
 // add a globals define that will be added to all opened sources
@@ -148,7 +144,7 @@ void QDECL SourceError(source_t *source, char *str, ...);
 void QDECL SourceWarning(source_t *source, char *str, ...);
 
 #ifdef BSPC
-// some of BSPC source does include game/qcommon/q_shared.h and some does not
+// some of BSPC source does include game/q_shared.h and some does not
 // we define pc_token_s pc_token_t if needed (yes, it's ugly)
 #ifndef __Q_SHARED_H
 #define MAX_TOKENLENGTH 1024

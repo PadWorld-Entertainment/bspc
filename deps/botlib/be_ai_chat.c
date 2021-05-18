@@ -614,7 +614,7 @@ bot_synonymlist_t *BotLoadSynonyms(char *filename) {
 				} // end if
 				else if (!strcmp(token.string, "[")) {
 					size += sizeof(bot_synonymlist_t);
-					if (pass) {
+					if (pass && ptr) {
 						syn = (bot_synonymlist_t *)ptr;
 						ptr += sizeof(bot_synonymlist_t);
 						syn->context = context;
@@ -659,7 +659,7 @@ bot_synonymlist_t *BotLoadSynonyms(char *filename) {
 							FreeSource(source);
 							return NULL;
 						} // end if
-						if (pass) {
+						if (pass && ptr) {
 							synonym->weight = token.floatvalue;
 							syn->totalweight += synonym->weight;
 						} // end if
@@ -772,7 +772,6 @@ void BotReplaceReplySynonyms(char *string, unsigned long int context) {
 			if (!(syn->context & context))
 				continue;
 			for (synonym = syn->firstsynonym->next; synonym; synonym = synonym->next) {
-				str2 = synonym->string;
 				// if the synonym is not at the front of the string continue
 				str2 = StringContainsWord(str1, synonym->string, qfalse);
 				if (!str2 || str2 != str1)
@@ -813,7 +812,7 @@ int BotLoadChatMessage(source_t *source, char *chatmessagestring) {
 	token_t token;
 
 	ptr = chatmessagestring;
-	*ptr = 0;
+	*ptr = '\0';
 	//
 	while (1) {
 		if (!PC_ExpectAnyToken(source, &token))
@@ -1938,7 +1937,7 @@ bot_chat_t *BotLoadInitialChat(char *chatfile, char *chatname) {
 							return NULL;
 						} // end if
 						StripDoubleQuotes(token.string);
-						if (pass) {
+						if (pass && ptr) {
 							chattype = (bot_chattype_t *)ptr;
 							strncpy(chattype->name, token.string, MAX_CHATTYPE_NAME);
 							chattype->firstchatmessage = NULL;

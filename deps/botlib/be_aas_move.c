@@ -447,6 +447,8 @@ int AAS_ClipToBBox(aas_trace_t *trace, vec3_t start, vec3_t end, int presencetyp
 	VectorSubtract(end, start, dir);
 	frac = 1;
 	for (i = 0; i < 3; i++) {
+		if (fabsf(dir[i]) < 0.001f) // this may cause denormalization or division by zero
+			continue;
 		// get plane to test collision with for the current axis direction
 		if (dir[i] > 0)
 			planedist = absmins[i];
@@ -488,6 +490,7 @@ int AAS_ClipToBBox(aas_trace_t *trace, vec3_t start, vec3_t end, int presencetyp
 	} // end if
 	return qfalse;
 } // end of the function AAS_ClipToBBox
+
 //===========================================================================
 // predicts the movement
 // assumes regular bounding box sizes
@@ -925,6 +928,7 @@ int AAS_ClientMovementPrediction(struct aas_clientmove_s *move, int entnum, vec3
 	//
 	return qtrue;
 } // end of the function AAS_ClientMovementPrediction
+
 //===========================================================================
 //
 // Parameter:			-
@@ -938,6 +942,7 @@ int AAS_PredictClientMovement(struct aas_clientmove_s *move, int entnum, vec3_t 
 	return AAS_ClientMovementPrediction(move, entnum, origin, presencetype, onground, velocity, cmdmove, cmdframes,
 										maxframes, frametime, stopevent, stopareanum, mins, maxs, visualize, 0); // cyr
 } // end of the function AAS_PredictClientMovement
+
 //===========================================================================
 //
 // Parameter:			-

@@ -110,7 +110,7 @@ qboolean ValidEntityNumber(int num, char *str) {
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-qboolean BotLibSetup(char *str) {
+static qboolean BotLibSetup(const char *str) {
 	if (!botlibglobals.botlibsetup) {
 		botimport.Print(PRT_ERROR, "%s: bot library used before being setup\n", str);
 		return qfalse;
@@ -277,7 +277,7 @@ int Export_BotLibLoadMap(const char *mapname) {
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-int Export_BotLibUpdateEntity(int ent, bot_entitystate_t *state) {
+static int Export_BotLibUpdateEntity(int ent, bot_entitystate_t *state) {
 	if (!BotLibSetup("BotUpdateEntity"))
 		return BLERR_LIBRARYNOTSETUP;
 	if (!ValidEntityNumber(ent, "BotUpdateEntity"))
@@ -593,7 +593,7 @@ int BotExportTest(int parm0, char *parm1, vec3_t parm2, vec3_t parm3) {
 		{
 			AAS_ShowFace(face - aasworld.faces);
 		} //end if
-		
+
 		AAS_DrawPlaneCross(bsptrace.endpos,
 									bsptrace.plane.normal,
 									bsptrace.plane.dist + bsptrace.exp_dist,

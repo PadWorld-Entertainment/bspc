@@ -57,10 +57,12 @@ static logfile_t logfile;
 void Log_Open(char *filename) {
 	if (!LibVarValue("log", "0"))
 		return;
-	if (!filename || !strlen(filename)) {
+
+	if (!filename || !*filename) {
 		botimport.Print(PRT_MESSAGE, "openlog <filename>\n");
 		return;
 	} // end if
+
 	if (logfile.fp) {
 		botimport.Print(PRT_ERROR, "log file %s is already opened\n", logfile.filename);
 		return;
