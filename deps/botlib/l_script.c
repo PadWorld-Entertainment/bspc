@@ -704,14 +704,12 @@ int PS_ReadNumber(script_t *script, token_t *token) {
 	for (i = 0; i < 2; i++) {
 		c = *script->script_p;
 		// check for a LONG number
-		if ((c == 'l' || c == 'L') // bk001204 - brackets
-			&& !(token->subtype & TT_LONG)) {
+		if ((c == 'l' || c == 'L') && !(token->subtype & TT_LONG)) {
 			script->script_p++;
 			token->subtype |= TT_LONG;
 		} // end if
 		// check for an UNSIGNED number
-		else if ((c == 'u' || c == 'U') // bk001204 - brackets
-				 && !(token->subtype & (TT_UNSIGNED | TT_FLOAT))) {
+		else if ((c == 'u' || c == 'U') && !(token->subtype & (TT_UNSIGNED | TT_FLOAT))) {
 			script->script_p++;
 			token->subtype |= TT_UNSIGNED;
 		} // end if
