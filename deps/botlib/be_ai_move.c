@@ -3421,7 +3421,6 @@ void BotMoveToGoal(bot_moveresult_t *result, int movestate, bot_goal_t *goal, in
 							ms->lastreachnum = lastreachnum;
 							ms->lastareanum = areas[i];
 							// botimport.Print(PRT_MESSAGE, "found jumppad reachability hard!!\n");
-							break;
 						} // end if
 					}	  // end for
 					if (lastreachnum)
@@ -3558,7 +3557,7 @@ void BotResetLastAvoidReach(int movestate) {
 	}	  // end for
 	if (latesttime) {
 		ms->avoidreachtimes[latest] = 0;
-		if (ms->avoidreachtries[i] > 0)
+		if (ms->avoidreachtries[latest] > 0)
 			ms->avoidreachtries[latest]--;
 	} // end if
 } // end of the function BotResetLastAvoidReach

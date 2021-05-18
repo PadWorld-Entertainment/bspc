@@ -629,22 +629,25 @@ bot_synonymlist_t *BotLoadSynonyms(const char *filename) {
 					numsynonyms = 0;
 					lastsynonym = NULL;
 					while (1) {
+						size_t len;
 						if (!PC_ExpectTokenString(source, "(") || !PC_ExpectTokenType(source, TT_STRING, 0, &token)) {
 							FreeSource(source);
 							return NULL;
 						} // end if
 						StripDoubleQuotes(token.string);
-						if (strlen(token.string) <= 0) {
-							SourceError(source, "empty string", token.string);
+						len = (int)strlen(token.string);
+						if (len == 0) {
+							SourceError(source, "empty string");
 							FreeSource(source);
 							return NULL;
 						} // end if
-						size += sizeof(bot_synonym_t) + strlen(token.string) + 1;
-						if (pass) {
+						len = PAD(len + 1, sizeof(long));
+						size += sizeof(bot_synonym_t) + len;
+						if (pass && ptr) {
 							synonym = (bot_synonym_t *)ptr;
 							ptr += sizeof(bot_synonym_t);
 							synonym->string = ptr;
-							ptr += strlen(token.string) + 1;
+							ptr += len;
 							strcpy(synonym->string, token.string);
 							//
 							if (lastsynonym)
@@ -917,17 +920,20 @@ bot_randomlist_t *BotLoadRandomStrings(const char *filename) {
 		lastrandom = NULL; // last
 		//
 		while (PC_ReadToken(source, &token)) {
+			size_t len;
 			if (token.type != TT_NAME) {
 				SourceError(source, "unknown random %s", token.string);
 				FreeSource(source);
 				return NULL;
 			} // end if
-			size += sizeof(bot_randomlist_t) + strlen(token.string) + 1;
-			if (pass) {
+			len = strlen(token.string) + 1;
+			len = PAD(len, sizeof(long));
+			size += sizeof(bot_randomlist_t) + len;
+			if (pass && ptr) {
 				random = (bot_randomlist_t *)ptr;
 				ptr += sizeof(bot_randomlist_t);
 				random->string = ptr;
-				ptr += strlen(token.string) + 1;
+				ptr += len;
 				strcpy(random->string, token.string);
 				random->firstrandomstring = NULL;
 				random->numstrings = 0;
@@ -947,12 +953,14 @@ bot_randomlist_t *BotLoadRandomStrings(const char *filename) {
 					FreeSource(source);
 					return NULL;
 				} // end if
-				size += sizeof(bot_randomstring_t) + strlen(chatmessagestring) + 1;
-				if (pass) {
+				len = strlen(chatmessagestring) + 1;
+				len = PAD(len, sizeof(long));
+				size += sizeof(bot_randomstring_t) + len;
+				if (pass && ptr) {
 					randomstring = (bot_randomstring_t *)ptr;
 					ptr += sizeof(bot_randomstring_t);
 					randomstring->string = ptr;
-					ptr += strlen(chatmessagestring) + 1;
+					ptr += len;
 					strcpy(randomstring->string, chatmessagestring);
 					//
 					random->numstrings++;
@@ -1950,11 +1958,14 @@ bot_chat_t *BotLoadInitialChat(char *chatfile, char *chatname) {
 						size += sizeof(bot_chattype_t);
 						// read the chat messages
 						while (!PC_CheckTokenString(source, "}")) {
+							size_t len;
 							if (!BotLoadChatMessage(source, chatmessagestring)) {
 								FreeSource(source);
 								return NULL;
 							} // end if
-							if (pass) {
+							len = strlen(chatmessagestring) + 1;
+							len = PAD(len, sizeof(long));
+							if (pass && ptr) {
 								chatmessage = (bot_chatmessage_t *)ptr;
 								chatmessage->time = -2 * CHATMESSAGE_RECENTTIME;
 								// put the chat message in the list
@@ -1964,11 +1975,11 @@ bot_chat_t *BotLoadInitialChat(char *chatfile, char *chatname) {
 								ptr += sizeof(bot_chatmessage_t);
 								chatmessage->chatmessage = ptr;
 								strcpy(chatmessage->chatmessage, chatmessagestring);
-								ptr += strlen(chatmessagestring) + 1;
+								ptr += len;
 								// the number of chat messages increased
 								chattype->numchatmessages++;
 							} // end if
-							size += sizeof(bot_chatmessage_t) + strlen(chatmessagestring) + 1;
+							size += sizeof(bot_chatmessage_t) + len;
 						} // end if
 					}	  // end while
 				}		  // end if

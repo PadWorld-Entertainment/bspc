@@ -3200,8 +3200,11 @@ static aas_lreachability_t *AAS_FindFaceReachabilities(vec3_t *facepoints, int n
 			VectorCopy(bestend, testpoint);
 		else
 			VectorCopy(beststart, testpoint);
-		testpoint[2] = 0;
-		testpoint[2] = (bestfaceplane->dist - DotProduct(bestfaceplane->normal, testpoint)) / bestfaceplane->normal[2];
+		if (bestfaceplane != NULL)
+			testpoint[2] =
+				(bestfaceplane->dist - DotProduct(bestfaceplane->normal, testpoint)) / bestfaceplane->normal[2];
+		else
+			testpoint[2] = 0;
 		//
 		if (!AAS_PointInsideFace(bestfacenum, testpoint, 0.1f)) {
 			// if the faces are not overlapping then only go down
@@ -3918,6 +3921,10 @@ static void AAS_SetWeaponJumpAreaFlags(void) {
 			!strcmp(classname, "weapon_rocketlauncher") || !strcmp(classname, "weapon_lightning") ||
 			!strcmp(classname, "weapon_plasmagun") || !strcmp(classname, "weapon_railgun") ||
 			!strcmp(classname, "weapon_bfg") || !strcmp(classname, "item_quad") || !strcmp(classname, "item_regen") ||
+			!strcmp(classname, "item_invulnerability") || !strcmp(classname, "item_armor_padshield") || !strcmp(classname, "weapon_balloony") ||
+			!strcmp(classname, "weapon_betty") || !strcmp(classname, "weapon_boaster") ||
+			!strcmp(classname, "weapon_bubbleg") || !strcmp(classname, "weapon_splasher") ||
+			!strcmp(classname, "weapon_imperius") || !strcmp(classname, "item_padpower") || !strcmp(classname, "item_revival") ||
 			!strcmp(classname, "item_invulnerability")) {
 			if (AAS_VectorForBSPEpairKey(ent, "origin", origin)) {
 				spawnflags = 0;
