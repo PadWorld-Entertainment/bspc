@@ -222,7 +222,7 @@ int Export_BotLibVarSet(const char *var_name, const char *value) {
 // Changes Globals:		-
 //===========================================================================
 int Export_BotLibVarGet(const char *var_name, char *value, int size) {
-	char *varvalue;
+	const char *varvalue;
 
 	varvalue = LibVarGetString(var_name);
 	strncpy(value, varvalue, size - 1);

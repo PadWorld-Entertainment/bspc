@@ -54,7 +54,7 @@ static logfile_t logfile;
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void Log_Open(char *filename) {
+void Log_Open(const char *filename) {
 	if (!LibVarValue("log", "0"))
 		return;
 

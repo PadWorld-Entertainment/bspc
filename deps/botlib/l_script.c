@@ -230,15 +230,15 @@ char *PunctuationFromNum(script_t *script, int num) {
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void QDECL ScriptError(script_t *script, char *str, ...) {
+void QDECL ScriptError(script_t *script, const char *fmt, ...) {
 	char text[1024];
 	va_list ap;
 
 	if (script->flags & SCFL_NOERRORS)
 		return;
 
-	va_start(ap, str);
-	vsprintf(text, str, ap);
+	va_start(ap, fmt);
+	vsprintf(text, fmt, ap);
 	va_end(ap);
 #ifdef BOTLIB
 	botimport.Print(PRT_ERROR, "file %s, line %d: %s\n", script->filename, script->line, text);
@@ -256,15 +256,15 @@ void QDECL ScriptError(script_t *script, char *str, ...) {
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void QDECL ScriptWarning(script_t *script, char *str, ...) {
+void QDECL ScriptWarning(script_t *script, const char *fmt, ...) {
 	char text[1024];
 	va_list ap;
 
 	if (script->flags & SCFL_NOWARNINGS)
 		return;
 
-	va_start(ap, str);
-	vsprintf(text, str, ap);
+	va_start(ap, fmt);
+	vsprintf(text, fmt, ap);
 	va_end(ap);
 #ifdef BOTLIB
 	botimport.Print(PRT_WARNING, "file %s, line %d: %s\n", script->filename, script->line, text);
@@ -899,7 +899,7 @@ int PS_ReadToken(script_t *script, token_t *token) {
 // Returns:					-
 // Changes Globals:		-
 //============================================================================
-int PS_ExpectTokenString(script_t *script, char *string) {
+int PS_ExpectTokenString(script_t *script, const char *string) {
 	token_t token;
 
 	if (!PS_ReadToken(script, &token)) {
@@ -998,7 +998,7 @@ int PS_ExpectAnyToken(script_t *script, token_t *token) {
 // Returns:					-
 // Changes Globals:		-
 //============================================================================
-int PS_CheckTokenString(script_t *script, char *string) {
+int PS_CheckTokenString(script_t *script, const char *string) {
 	token_t tok;
 
 	if (!PS_ReadToken(script, &tok))
@@ -1036,7 +1036,7 @@ int PS_CheckTokenType(script_t *script, int type, int subtype, token_t *token) {
 // Returns:					-
 // Changes Globals:		-
 //============================================================================
-int PS_SkipUntilString(script_t *script, char *string) {
+int PS_SkipUntilString(script_t *script, const char *string) {
 	token_t token;
 
 	while (PS_ReadToken(script, &token)) {
@@ -1324,7 +1324,7 @@ script_t *LoadScriptFile(const char *filename) {
 // Returns:				-
 // Changes Globals:		-
 //============================================================================
-script_t *LoadScriptMemory(char *ptr, int length, char *name) {
+script_t *LoadScriptMemory(const char *ptr, int length, const char *name) {
 	void *buffer;
 	script_t *script;
 
@@ -1372,6 +1372,6 @@ void FreeScript(script_t *script) {
 // Returns:					-
 // Changes Globals:		-
 //============================================================================
-void PS_SetBaseFolder(char *path) {
+void PS_SetBaseFolder(const char *path) {
 	Q_strncpyz(basefolder, path, sizeof(basefolder));
 } // end of the function PS_SetBaseFolder
