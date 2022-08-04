@@ -4713,6 +4713,20 @@ int AAS_ContinueInitReachability(float time) {
 			continue;
 		} // end if
 
+		// loop over the areas
+		for (j = 1; j < aasworld.numareas; j++) {
+			if (i == j)
+				continue;
+			//
+			if (AAS_ReachabilityExists(i, j))
+				continue;
+			// check for a grapple hook reachability
+			if (calcgrapplereach)
+				AAS_Reachability_Grapple(i, j);
+			// check for a weapon jump reachability
+			AAS_Reachability_WeaponJump(i, j);
+		} // end for
+
 		// if the calculation took more time than the max reachability delay
 		if (Sys_MilliSeconds() - start_time > (int)reachability_delay)
 			break;
