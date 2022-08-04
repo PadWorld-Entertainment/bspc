@@ -221,12 +221,7 @@ $(EXEC)_g$(BINEXT): $(GAME_OBJS) $(EXPAT_OBJS)
 #############################################################################
 # MISC
 #############################################################################
-.PHONY: clean depend
+.PHONY: clean
 
 clean:
-	-rm -f $(GAME_OBJS) $(EXEC) $(EXEC)_g
-
-depend:
-	$(CC) $(CFLAGS) -MM $(GAME_OBJS:.o=.c) > .deps
-
-include .deps
+	-rm -f $(GAME_OBJS) $(EXEC)$(BINEXT) $(EXEC)_g$(BINEXT)
