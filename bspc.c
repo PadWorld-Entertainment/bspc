@@ -282,6 +282,7 @@ int main (int argc, char **argv)
 	static char filename[MAX_PATH] = "unknown";
 	quakefile_t *qfiles, *qf;
 	double start_time;
+	int exitcode = 0;
 
 	myargc = argc;
 	myargv = argv;
@@ -507,7 +508,10 @@ int main (int argc, char **argv)
 		{
 			case COMP_BSP2MAP:
 			{
-				if (!qfiles) Log_Print("no files found\n");
+				if (!qfiles) {
+					Log_Print("no files found\n");
+					exitcode = 127;
+				}
 				for (qf = qfiles; qf; qf = qf->next)
 				{
 					//copy the output path
@@ -529,7 +533,10 @@ int main (int argc, char **argv)
 			} //end case
 			case COMP_BSP2AAS:
 			{
-				if (!qfiles) Log_Print("no files found\n");
+				if (!qfiles) {
+					Log_Print("no files found\n");
+					exitcode = 127;
+				}
 				for (qf = qfiles; qf; qf = qf->next)
 				{
 					AASOuputFile(qf, outputpath, filename);
@@ -563,7 +570,10 @@ int main (int argc, char **argv)
 			} //end case
 			case COMP_REACH:
 			{
-				if (!qfiles) Log_Print("no files found\n");
+				if (!qfiles) {
+					Log_Print("no files found\n");
+					exitcode = 127;
+				}
 				for (qf = qfiles; qf; qf = qf->next)
 				{
 					AASOuputFile(qf, outputpath, filename);
@@ -615,7 +625,10 @@ int main (int argc, char **argv)
 			} //end case
 			case COMP_CLUSTER:
 			{
-				if (!qfiles) Log_Print("no files found\n");
+				if (!qfiles) {
+					Log_Print("no files found\n");
+					exitcode = 127;
+				}
 				for (qf = qfiles; qf; qf = qf->next)
 				{
 					AASOuputFile(qf, outputpath, filename);
@@ -670,7 +683,10 @@ int main (int argc, char **argv)
 			} //end case
 			case COMP_AASOPTIMIZE:
 			{
-				if (!qfiles) Log_Print("no files found\n");
+				if (!qfiles) {
+					Log_Print("no files found\n");
+					exitcode = 127;
+				}
 				for (qf = qfiles; qf; qf = qf->next)
 				{
 					AASOuputFile(qf, outputpath, filename);
@@ -703,7 +719,10 @@ int main (int argc, char **argv)
 			} //end case
 			case COMP_AASINFO:
 			{
-				if (!qfiles) Log_Print("no files found\n");
+				if (!qfiles) {
+					Log_Print("no files found\n");
+					exitcode = 127;
+				}
 				for (qf = qfiles; qf; qf = qf->next)
 				{
 					AASOuputFile(qf, outputpath, filename);
@@ -730,6 +749,7 @@ int main (int argc, char **argv)
 			default:
 			{
 				Log_Print("don't know what to do\n");
+				exitcode = 1;
 				break;
 			} //end default
 		} //end switch
