@@ -729,13 +729,13 @@ int main (int argc, char **argv)
 	} //end if
 	else
 	{
-		Log_Print("Usage:   bspc [-<switch> [-<switch> ...]]\n"
+		Log_Print("Usage:   bspcwop [-<switch> [-<switch> ...]]\n"
 #if defined(WIN32) || defined(_WIN32)
-			"Example 1: bspc -bsp2aas d:\\quake3\\baseq3\\maps\\mymap?.bsp\n"
-			"Example 2: bspc -bsp2aas d:\\quake3\\baseq3\\pak0.pk3\\maps/q3dm*.bsp\n"
+			"Example 1: bspcwop -bsp2aas d:\\quake3\\baseq3\\maps\\mymap?.bsp\n"
+			"Example 2: bspcwop -bsp2aas d:\\quake3\\baseq3\\pak0.pk3\\maps/q3dm*.bsp\n"
 #else
-			"Example 1: bspc -bsp2aas /quake3/baseq3/maps/mymap?.bsp\n"
-			"Example 2: bspc -bsp2aas /quake3/baseq3/pak0.pk3/maps/q3dm*.bsp\n"
+			"Example 1: bspcwop -bsp2aas /quake3/baseq3/maps/mymap?.bsp\n"
+			"Example 2: bspcwop -bsp2aas /quake3/baseq3/pak0.pk3/maps/q3dm*.bsp\n"
 #endif
 			"\n"
 			"Switches:\n"
@@ -767,7 +767,7 @@ int main (int argc, char **argv)
 			"   nowater    = disables water brushes\n"
 			"   noprune    = disables node prunes\n"
 			"   nomerge    = disables face merging\n"
-			"   nosubdiv   = disables subdeviding\n"
+			"   nosubdiv   = disables subdividing\n"
 			"   nodetail   = disables detail brushes\n"
 			"   fulldetail = enables full detail\n"
 			"   onlyents   = only compile entities with bsp\n"
