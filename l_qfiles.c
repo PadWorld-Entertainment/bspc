@@ -455,11 +455,15 @@ quakefile_t *FindQuakeFilesWithPakFilter(char *pakfilter, char *filter)
 			} //end if
 			else
 			{
+				int casesensitive = true;
 #if defined(WIN32)|defined(_WIN32)
-				str = StringContains(pakfile, ".pk3", false);
-#else
-				str = StringContains(pakfile, ".pk3", true);
+				casesensitive = false;
 #endif
+				str = NULL;
+				if (StringContains(pakfile, ".pk3dir", casesensitive) == NULL) {
+					str = StringContains(pakfile, ".pk3", casesensitive);
+					Log_Print("Found pk3\n");
+				}
 				if (str && str == pakfile + strlen(pakfile) - strlen(".pk3"))
 				{
 					qf = FindQuakeFilesInZip(pakfile, filter);
@@ -548,7 +552,11 @@ quakefile_t *FindQuakeFiles(char *filter)
 	strcpy(pakfilter, newfilter);
 
 	str = StringContains(pakfilter, ".pak", false);
-	if (!str) str = StringContains(pakfilter, ".pk3", false);
+	if (!str) {
+		if (StringContains(pakfilter, ".pk3dir", false) == NULL) {
+			str = StringContains(pakfilter, ".pk3", false);
+		}
+	}
 
 	if (str)
 	{
