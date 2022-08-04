@@ -230,7 +230,7 @@ void CreateAASFilesForAllBSPFiles(char *quakepath)
 // Returns:				-
 // Changes Globals:		-
 //===========================================================================
-quakefile_t *GetArgumentFiles(int argc, char *argv[], int *i, char *ext)
+static quakefile_t *GetArgumentFiles(int argc, char *argv[], int *i, const char *ext)
 {
 	quakefile_t *qfiles, *lastqf, *qf;
 	int j;
@@ -246,7 +246,14 @@ quakefile_t *GetArgumentFiles(int argc, char *argv[], int *i, char *ext)
 		if (j >= strlen(buf)-4)
 			strcpy(&buf[j+1], ext);
 		qf = FindQuakeFiles(buf);
-		if (!qf) continue;
+		if (!qf) {
+			if (verbose) {
+				Log_Print("Nothing found in %s\n", buf);
+			}
+			continue;
+		} else if (verbose) {
+			Log_Print("Found files in %s\n", buf);
+		}
 		if (lastqf) lastqf->next = qf;
 		else qfiles = qf;
 		lastqf = qf;
