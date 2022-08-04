@@ -129,7 +129,6 @@ DO_CC=$(CC) $(CFLAGS) -o $@ -c $<
 	$(DO_CC)
 
 GAME_OBJS = \
-	_files.o\
 	aas_areamerging.o\
 	aas_cfg.o\
 	aas_create.o\
