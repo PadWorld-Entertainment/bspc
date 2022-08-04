@@ -129,6 +129,24 @@ DO_CC=$(CC) $(CFLAGS) -o $@ -c $<
 	$(DO_CC)
 
 GAME_OBJS = \
+	deps/botlib/be_aas_bspq3.o\
+	deps/botlib/be_aas_cluster.o\
+	deps/botlib/be_aas_move.o\
+	deps/botlib/be_aas_optimize.o\
+	deps/botlib/be_aas_reach.o\
+	deps/botlib/be_aas_sample.o\
+	deps/botlib/l_libvar.o\
+	deps/botlib/l_precomp.o\
+	deps/botlib/l_script.o\
+	deps/botlib/l_struct.o\
+	\
+	deps/qcommon/cm_load.o\
+	deps/qcommon/cm_patch.o\
+	deps/qcommon/cm_test.o\
+	deps/qcommon/cm_trace.o\
+	deps/qcommon/md4.o\
+	deps/qcommon/unzip.o\
+	\
 	aas_areamerging.o\
 	aas_cfg.o\
 	aas_create.o\
@@ -140,18 +158,8 @@ GAME_OBJS = \
 	aas_prunenodes.o\
 	aas_store.o\
 	be_aas_bspc.o\
-	deps/botlib/be_aas_bspq3.o\
-	deps/botlib/be_aas_cluster.o\
-	deps/botlib/be_aas_move.o\
-	deps/botlib/be_aas_optimize.o\
-	deps/botlib/be_aas_reach.o\
-	deps/botlib/be_aas_sample.o\
 	brushbsp.o\
 	bspc.o\
-	deps/qcommon/cm_load.o\
-	deps/qcommon/cm_patch.o\
-	deps/qcommon/cm_test.o\
-	deps/qcommon/cm_trace.o\
 	csg.o\
 	glfile.o\
 	l_bsp_ent.o\
@@ -161,15 +169,11 @@ GAME_OBJS = \
 	l_bsp_q3.o\
 	l_bsp_sin.o\
 	l_cmd.o\
-	deps/botlib/l_libvar.o\
 	l_log.o\
 	l_math.o\
 	l_mem.o\
 	l_poly.o\
-	deps/botlib/l_precomp.o\
 	l_qfiles.o\
-	deps/botlib/l_script.o\
-	deps/botlib/l_struct.o\
 	l_threads.o\
 	l_utils.o\
 	leakfile.o\
@@ -179,14 +183,10 @@ GAME_OBJS = \
 	map_q2.o\
 	map_q3.o\
 	map_sin.o\
-	deps/qcommon/md4.o\
 	nodraw.o\
 	portals.o\
 	textures.o\
-	tree.o\
-	deps/qcommon/unzip.o
-
-        #tetrahedron.o
+	tree.o
 
 ifeq ($(USE_INTERNAL_LIBS),1)
 	EXPAT_OBJS = \
