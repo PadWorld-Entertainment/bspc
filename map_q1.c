@@ -643,7 +643,8 @@ bspbrush_t *Q1_SplitBrushWithFace(bspbrush_t *brush, q1_dface_t *face) {
 	q1_dplane_t plane;
 	vec_t *v1, *v2;
 	vec3_t normal, edgevec;
-	bspbrush_t *front, *back, *brushlist;
+	bspbrush_t *front = NULL;
+	bspbrush_t *back, *brushlist;
 
 	memcpy(&plane, &q1_dplanes[face->planenum], sizeof(q1_dplane_t));
 	// check on which side of the plane the face is

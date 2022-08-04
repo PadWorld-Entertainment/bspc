@@ -793,5 +793,5 @@ int main(int argc, char **argv) {
 	} // end else
 	Log_Print("BSPC run time is %5.0f seconds\n", I_FloatTime() - start_time);
 	Log_Close(); // close the log file
-	return 0;
+	return exitcode;
 } // end of the function main

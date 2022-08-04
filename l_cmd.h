@@ -84,7 +84,7 @@ char *ExpandPathAndArchive(char *path);
 
 double I_FloatTime(void);
 
-void Error(char *error, ...);
+void Error(char *error, ...) __attribute__ ((noreturn));
 void Warning(char *warning, ...);
 
 int CheckParm(char *check);
