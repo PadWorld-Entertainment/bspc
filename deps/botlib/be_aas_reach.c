@@ -1189,7 +1189,7 @@ static int AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, in
 					// if the two projected edge lines have no overlap
 					if (x2 <= x3 || x4 <= x1) {
 						//						Log_Write("lines no overlap: from area %d to %d\r\n", area1num,
-						//area2num);
+						// area2num);
 						continue;
 					} // end if
 					// if the two lines fully overlap
@@ -1782,7 +1782,8 @@ float AAS_ClosestEdgePoints(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4,
 } //end of the function AAS_ClosestEdgePoints*/
 
 static float AAS_ClosestEdgePoints(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4, aas_plane_t *plane1, aas_plane_t *plane2,
-							vec3_t beststart1, vec3_t bestend1, vec3_t beststart2, vec3_t bestend2, float bestdist) {
+								   vec3_t beststart1, vec3_t bestend1, vec3_t beststart2, vec3_t bestend2,
+								   float bestdist) {
 	vec3_t dir1, dir2, p1, p2, p3, p4;
 	float a1, a2, b1, b2, dist, dist1, dist2;
 	int founddist;
@@ -2509,7 +2510,7 @@ int AAS_Reachability_Ladder(int area1num, int area2num) {
 				Log_Write("trace from area %d started in solid\r\n", area1num);
 			} // end if
 #endif		  // REACH_DEBUG
-	   //
+			  //
 			trace.endpos[2] += 1;
 			area2num = AAS_PointAreaNum(trace.endpos);
 			//
@@ -2574,53 +2575,53 @@ int AAS_Reachability_Ladder(int area1num, int area2num) {
 					Log_Write("jump too high between area %d and %d\r\n", area2num, area1num);
 #endif		  // REACH_DEBUG
 			} // end if
-			/*//if slime or lava below the ladder
-			//try jump reachability from far towards the ladder
-			if (aasworld.areasettings[area2num].contents & (AREACONTENTS_SLIME
-													| AREACONTENTS_LAVA))
-			{
-				for (i = 20; i <= 120; i += 20)
-				{
-					//trace down in the middle of this edge
-					VectorMA(lowestpoint, i, plane1->normal, start);
-					VectorCopy(start, end);
-					start[2] += 5;
-					end[2] -= 100;
-					//trace without entity collision
-					trace = AAS_TraceClientBBox(start, end, PRESENCE_NORMAL, -1);
-					//
-					if (trace.startsolid) break;
-					trace.endpos[2] += 1;
-					area2num = AAS_PointAreaNum(trace.endpos);
-					if (area2num == area1num) continue;
-					//
-					if (start[2] - trace.endpos[2] > maxjumpheight) continue;
-					if (aasworld.areasettings[area2num].contents & (AREACONTENTS_SLIME
-												| AREACONTENTS_LAVA)) continue;
-					//
-					//create a new reachability link
-					lreach = AAS_AllocReachability();
-					if (!lreach) return qfalse;
-					lreach->areanum = area1num;
-					lreach->facenum = ladderface1num;
-					lreach->edgenum = lowestedgenum;
-					VectorCopy(trace.endpos, lreach->start);
-					VectorCopy(lowestpoint, lreach->end);
-					lreach->end[2] += 5;
-					lreach->traveltype = TRAVEL_JUMP;
-					lreach->traveltime = 10;
-					lreach->next = areareachability[area2num];
-					areareachability[area2num] = lreach;
-					//
-					reach_jump++;
-					//
-					Log_Write("jump far to ladder reach between %d and %d\r\n", area2num, area1num);
-					//
-					break;
-				} //end for
-			} //end if*/
-		} // end if
-	}	  // end if
+			  /*//if slime or lava below the ladder
+			  //try jump reachability from far towards the ladder
+			  if (aasworld.areasettings[area2num].contents & (AREACONTENTS_SLIME
+													  | AREACONTENTS_LAVA))
+			  {
+				  for (i = 20; i <= 120; i += 20)
+				  {
+					  //trace down in the middle of this edge
+					  VectorMA(lowestpoint, i, plane1->normal, start);
+					  VectorCopy(start, end);
+					  start[2] += 5;
+					  end[2] -= 100;
+					  //trace without entity collision
+					  trace = AAS_TraceClientBBox(start, end, PRESENCE_NORMAL, -1);
+					  //
+					  if (trace.startsolid) break;
+					  trace.endpos[2] += 1;
+					  area2num = AAS_PointAreaNum(trace.endpos);
+					  if (area2num == area1num) continue;
+					  //
+					  if (start[2] - trace.endpos[2] > maxjumpheight) continue;
+					  if (aasworld.areasettings[area2num].contents & (AREACONTENTS_SLIME
+												  | AREACONTENTS_LAVA)) continue;
+					  //
+					  //create a new reachability link
+					  lreach = AAS_AllocReachability();
+					  if (!lreach) return qfalse;
+					  lreach->areanum = area1num;
+					  lreach->facenum = ladderface1num;
+					  lreach->edgenum = lowestedgenum;
+					  VectorCopy(trace.endpos, lreach->start);
+					  VectorCopy(lowestpoint, lreach->end);
+					  lreach->end[2] += 5;
+					  lreach->traveltype = TRAVEL_JUMP;
+					  lreach->traveltime = 10;
+					  lreach->next = areareachability[area2num];
+					  areareachability[area2num] = lreach;
+					  //
+					  reach_jump++;
+					  //
+					  Log_Write("jump far to ladder reach between %d and %d\r\n", area2num, area1num);
+					  //
+					  break;
+				  } //end for
+			  } //end if*/
+		}	  // end if
+	}		  // end if
 	return qfalse;
 } // end of the function AAS_Reachability_Ladder
 //===========================================================================
@@ -2822,10 +2823,11 @@ void AAS_Reachability_Teleport(void) {
 					VectorClear(velocity);
 				} // end else
 				VectorClear(cmdmove);
-				AAS_PredictClientMovement(
-					&move, -1, destorigin, PRESENCE_NORMAL, qfalse, velocity, cmdmove, 0, 30, 0.1f,
-					SE_HITGROUND | SE_ENTERWATER | SE_ENTERSLIME | SE_ENTERLAVA | SE_HITGROUNDDAMAGE | SE_TOUCHJUMPPAD | SE_TOUCHTELEPORTER,
-					0, qfalse); // qtrue);
+				AAS_PredictClientMovement(&move, -1, destorigin, PRESENCE_NORMAL, qfalse, velocity, cmdmove, 0, 30,
+										  0.1f,
+										  SE_HITGROUND | SE_ENTERWATER | SE_ENTERSLIME | SE_ENTERLAVA |
+											  SE_HITGROUNDDAMAGE | SE_TOUCHJUMPPAD | SE_TOUCHTELEPORTER,
+										  0, qfalse); // qtrue);
 				area2num = AAS_PointAreaNum(move.endpos);
 				if (move.stopevent & (SE_ENTERSLIME | SE_ENTERLAVA)) {
 					botimport.Print(PRT_WARNING, "teleported into slime or lava at dest %s\n", target);
@@ -3120,7 +3122,7 @@ static void AAS_Reachability_Elevator(void) {
 // Changes Globals:		-
 //===========================================================================
 static aas_lreachability_t *AAS_FindFaceReachabilities(vec3_t *facepoints, int numpoints, aas_plane_t *plane,
-												int towardsface) {
+													   int towardsface) {
 	int i, j, k, l;
 	int facenum, edgenum, bestfacenum;
 	float *v1, *v2, *v3, *v4;
@@ -3596,8 +3598,8 @@ static void AAS_Reachability_JumpPad(void) {
 			area2num = 0;
 			for (i = 0; i < 20; i++) {
 				AAS_PredictClientMovement(&move, -1, areastart, PRESENCE_NORMAL, qfalse, velocity, cmdmove, 0, 30, 0.1f,
-										  SE_HITGROUND | SE_ENTERWATER | SE_ENTERSLIME | SE_ENTERLAVA | SE_HITGROUNDDAMAGE |
-											  SE_TOUCHJUMPPAD | SE_TOUCHTELEPORTER,
+										  SE_HITGROUND | SE_ENTERWATER | SE_ENTERSLIME | SE_ENTERLAVA |
+											  SE_HITGROUNDDAMAGE | SE_TOUCHJUMPPAD | SE_TOUCHTELEPORTER,
 										  0, bot_visualizejumppads);
 				area2num = move.endarea;
 				for (link = areas; link; link = link->next_area) {
@@ -4051,8 +4053,8 @@ int AAS_Reachability_WeaponJump(int area1num, int area2num) {
 					//
 					AAS_PredictClientMovement(&move, -1, areastart, PRESENCE_NORMAL, qtrue, velocity, cmdmove, 30, 30,
 											  0.1f,
-											  SE_ENTERWATER | SE_ENTERSLIME | SE_ENTERLAVA | SE_HITGROUNDDAMAGE | SE_TOUCHJUMPPAD |
-												  SE_HITGROUND | SE_HITGROUNDAREA,
+											  SE_ENTERWATER | SE_ENTERSLIME | SE_ENTERLAVA | SE_HITGROUNDDAMAGE |
+												  SE_TOUCHJUMPPAD | SE_HITGROUND | SE_HITGROUNDAREA,
 											  area2num, visualize);
 					// if prediction time wasn't enough to fully predict the movement
 					// don't enter slime or lava and don't fall from too high

@@ -1081,14 +1081,14 @@ void BotUpdateEntityItems(void) {
 		AddLevelItemToList(li);
 		// botimport.Print(PRT_MESSAGE, "found new level item %s\n", ic->iteminfo[i].classname);
 	} // end for
-	/*
-	for (li = levelitems; li; li = li->next)
-	{
-		if (!li->entitynum)
-		{
-			BotFindEntityForLevelItem(li);
-		} //end if
-	} //end for*/
+	  /*
+	  for (li = levelitems; li; li = li->next)
+	  {
+		  if (!li->entitynum)
+		  {
+			  BotFindEntityForLevelItem(li);
+		  } //end if
+	  } //end for*/
 } // end of the function BotUpdateEntityItems
 //===========================================================================
 //

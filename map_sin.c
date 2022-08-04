@@ -25,11 +25,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "qbsp.h"
 #include "l_bsp_sin.h"
-#include "aas_map.h"			//AAS_CreateMapBrushes
-
+#include "aas_map.h" //AAS_CreateMapBrushes
 
 //====================================================================
-
 
 /*
 ===========
@@ -37,15 +35,14 @@ Sin_BrushContents
 ===========
 */
 
-int Sin_BrushContents(mapbrush_t *b)
-{
-	int			contents;
-	side_t		*s;
-	int			i;
+int Sin_BrushContents(mapbrush_t *b) {
+	int contents;
+	side_t *s;
+	int i;
 #ifdef SIN
-	float			trans = 0;
+	float trans = 0;
 #else
-	int			trans;
+	int trans;
 #endif
 
 	s = &b->original_sides[0];
@@ -56,38 +53,30 @@ int Sin_BrushContents(mapbrush_t *b)
 #else
 	trans = texinfo[s->texinfo].flags;
 #endif
-	for (i=1 ; i<b->numsides ; i++, s++)
-	{
+	for (i = 1; i < b->numsides; i++, s++) {
 		s = &b->original_sides[i];
 #ifdef SIN
 		trans += sin_texinfo[s->texinfo].translucence;
 #else
 		trans |= texinfo[s->texinfo].flags;
 #endif
-		if (s->contents != contents)
-		{
+		if (s->contents != contents) {
 #ifdef SIN
-      if ( 
-            ( s->contents & CONTENTS_DETAIL && !(contents & CONTENTS_DETAIL) ) ||
-            ( !(s->contents & CONTENTS_DETAIL) && contents & CONTENTS_DETAIL ) 
-         )
-         {
-         s->contents |= CONTENTS_DETAIL;
-         contents |= CONTENTS_DETAIL;
-         continue;
-         }
+			if ((s->contents & CONTENTS_DETAIL && !(contents & CONTENTS_DETAIL)) ||
+				(!(s->contents & CONTENTS_DETAIL) && contents & CONTENTS_DETAIL)) {
+				s->contents |= CONTENTS_DETAIL;
+				contents |= CONTENTS_DETAIL;
+				continue;
+			}
 #endif
-			printf ("Entity %i, Brush %i: mixed face contents\n"
-				, b->entitynum, b->brushnum);
+			printf("Entity %i, Brush %i: mixed face contents\n", b->entitynum, b->brushnum);
 			break;
 		}
 	}
 
-
 #ifdef SIN
-	if (contents & CONTENTS_FENCE)
-	{
-//		contents |= CONTENTS_TRANSLUCENT;
+	if (contents & CONTENTS_FENCE) {
+		//		contents |= CONTENTS_TRANSLUCENT;
 		contents |= CONTENTS_DETAIL;
 		contents |= CONTENTS_DUMMYFENCE;
 		contents &= ~CONTENTS_SOLID;
@@ -99,14 +88,13 @@ int Sin_BrushContents(mapbrush_t *b)
 	// if any side is translucent, mark the contents
 	// and change solid to window
 #ifdef SIN
-	if ( trans > 0 )
+	if (trans > 0)
 #else
-	if ( trans & (SURF_TRANS33|SURF_TRANS66) )
+	if (trans & (SURF_TRANS33 | SURF_TRANS66))
 #endif
 	{
 		contents |= CONTENTS_Q2TRANSLUCENT;
-		if (contents & CONTENTS_SOLID)
-		{
+		if (contents & CONTENTS_SOLID) {
 			contents &= ~CONTENTS_SOLID;
 			contents |= CONTENTS_WINDOW;
 		}
@@ -115,10 +103,7 @@ int Sin_BrushContents(mapbrush_t *b)
 	return contents;
 } //*/
 
-
 //============================================================================
-
-
 
 /*
 =================
@@ -164,17 +149,17 @@ void ParseBrush (entity_t *mapent)
 				GetToken (true);
 			if (strcmp (token, "(") )
 				Error ("parsing brush");
-			
+
 			for (j=0 ; j<3 ; j++)
 			{
 				GetToken (false);
 				planepts[i][j] = atoi(token);
 			}
-			
+
 			GetToken (false);
 			if (strcmp (token, ")") )
 				Error ("parsing brush");
-				
+
 		}
 
 
@@ -190,9 +175,9 @@ void ParseBrush (entity_t *mapent)
 		td.shift[1] = atoi(token);
 		GetToken (false);
 #ifdef SIN
-		td.rotate = atof(token);	
+		td.rotate = atof(token);
 #else
-		td.rotate = atoi(token);	
+		td.rotate = atoi(token);
 #endif
 		GetToken (false);
 		td.scale[0] = atof(token);
@@ -202,15 +187,15 @@ void ParseBrush (entity_t *mapent)
 		// find default flags and values
 		mt = FindMiptex (td.name);
 #ifdef SIN
-      // clear out the masks on newref
-      memset(&newref,0,sizeof(newref));
-      // copy over the name
-      strcpy( newref.name, td.name );
+	  // clear out the masks on newref
+	  memset(&newref,0,sizeof(newref));
+	  // copy over the name
+	  strcpy( newref.name, td.name );
 
-      ParseSurfaceInfo( &newref );
-      MergeRefs( &bsp_textureref[mt], &newref, &td.tref );
-      side->contents = td.tref.contents;
-      side->surf = td.tref.flags;
+	  ParseSurfaceInfo( &newref );
+	  MergeRefs( &bsp_textureref[mt], &newref, &td.tref );
+	  side->contents = td.tref.contents;
+	  side->surf = td.tref.flags;
 #else
 		td.flags = textureref[mt].flags;
 		td.value = textureref[mt].value;
@@ -239,7 +224,7 @@ void ParseBrush (entity_t *mapent)
 			side->contents |= CONTENTS_DETAIL;
 		if (fulldetail)
 			side->contents &= ~CONTENTS_DETAIL;
-		if (!(side->contents & ((LAST_VISIBLE_CONTENTS-1) 
+		if (!(side->contents & ((LAST_VISIBLE_CONTENTS-1)
 			| CONTENTS_PLAYERCLIP|CONTENTS_MONSTERCLIP|CONTENTS_MIST)  ) )
 			side->contents |= CONTENTS_SOLID;
 
@@ -294,9 +279,9 @@ void ParseBrush (entity_t *mapent)
 #ifdef SIN
 		side->texinfo = TexinfoForBrushTexture (&mapplanes[planenum],
 			&td, vec3_origin, &newref);
-      // 
-      // save off lightinfo
-      //
+	  //
+	  // save off lightinfo
+	  //
 		side->lightinfo = LightinfoForBrushTexture ( &td );
 #else
 		side->texinfo = TexinfoForBrushTexture (&mapplanes[planenum],
@@ -308,7 +293,7 @@ void ParseBrush (entity_t *mapent)
 		// have to recalculate the texinfo
 		side_brushtextures[nummapbrushsides] = td;
 #ifdef SIN
-      // save off the merged tref for animating textures
+	  // save off the merged tref for animating textures
 		side_newrefs[nummapbrushsides] = newref;
 #endif
 
@@ -319,7 +304,7 @@ void ParseBrush (entity_t *mapent)
 	// get the content for the entire brush
 	b->contents = Sin_BrushContents (b);
 
-	// allow detail brushes to be removed 
+	// allow detail brushes to be removed
 	if (nodetail && (b->contents & CONTENTS_DETAIL) )
 	{
 		b->numsides = 0;
@@ -381,7 +366,7 @@ void ParseBrush (entity_t *mapent)
 	AddBrushBevels (b);
 
 	nummapbrushes++;
-	mapent->numbrushes++;		
+	mapent->numbrushes++;
 } //*/
 
 /*
@@ -452,7 +437,7 @@ qboolean	Sin_ParseMapEntity (void)
 
 	if (strcmp (token, "{") )
 		Error ("ParseEntity: { not found");
-	
+
 	if (num_entities == MAX_MAP_ENTITIES)
 		Error ("num_entities == MAX_MAP_ENTITIES");
 
@@ -479,21 +464,21 @@ qboolean	Sin_ParseMapEntity (void)
 		{
 			e = ParseEpair ();
 #ifdef SIN
-         //HACK HACK HACK
-         // MED Gotta do this here
-         if ( !stricmp(e->key, "surfacefile") )
-            {
-            if (!surfacefile[0])
-               {
-               strcpy( surfacefile, e->value );
-               }
-		      printf ("--- ParseSurfaceFile ---\n");
-		      printf ("Surface script: %s\n", surfacefile);
-		      if (!ParseSurfaceFile(surfacefile))
-               {
-		         Error ("Script file not found: %s\n", surfacefile);
-               }
-            }
+		 //HACK HACK HACK
+		 // MED Gotta do this here
+		 if ( !stricmp(e->key, "surfacefile") )
+			{
+			if (!surfacefile[0])
+			   {
+			   strcpy( surfacefile, e->value );
+			   }
+			  printf ("--- ParseSurfaceFile ---\n");
+			  printf ("Surface script: %s\n", surfacefile);
+			  if (!ParseSurfaceFile(surfacefile))
+			   {
+				 Error ("Script file not found: %s\n", surfacefile);
+			   }
+			}
 #endif
 			e->next = mapent->epairs;
 			mapent->epairs = e;
@@ -501,49 +486,49 @@ qboolean	Sin_ParseMapEntity (void)
 	} while (1);
 
 #ifdef SIN
-    if (!(strlen(ValueForKey(mapent, "origin")))  && ((num_entities-1) != 0))
-        {
-        mapbrush_t     *brush;
-        vec3_t		    origin;
-  	    char		    string[32];
-        vec3_t          mins, maxs;
-        int			    start, end;
-        // Calculate bounds
+	if (!(strlen(ValueForKey(mapent, "origin")))  && ((num_entities-1) != 0))
+		{
+		mapbrush_t     *brush;
+		vec3_t		    origin;
+		char		    string[32];
+		vec3_t          mins, maxs;
+		int			    start, end;
+		// Calculate bounds
 
-        start = mapent->firstbrush;
-	    end = start + mapent->numbrushes;
-	    ClearBounds (mins, maxs);
+		start = mapent->firstbrush;
+		end = start + mapent->numbrushes;
+		ClearBounds (mins, maxs);
 
-	    for (j=start ; j<end ; j++)
-            {
-	        brush = &mapbrushes[j];
-		    if (!brush->numsides)
-			    continue;	// not a real brush (origin brush) - shouldn't happen
-		    AddPointToBounds (brush->mins, mins, maxs);
-		    AddPointToBounds (brush->maxs, mins, maxs);
-            }
+		for (j=start ; j<end ; j++)
+			{
+			brush = &mapbrushes[j];
+			if (!brush->numsides)
+				continue;	// not a real brush (origin brush) - shouldn't happen
+			AddPointToBounds (brush->mins, mins, maxs);
+			AddPointToBounds (brush->maxs, mins, maxs);
+			}
 
-        // Set the origin to be the centroid of the entity.
-        VectorAdd ( mins, maxs, origin);
+		// Set the origin to be the centroid of the entity.
+		VectorAdd ( mins, maxs, origin);
 		VectorScale( origin, 0.5f, origin );
 
 		sprintf (string, "%i %i %i", (int)origin[0], (int)origin[1], (int)origin[2]);
 		SetKeyValue ( mapent, "origin", string);
 //        qprintf("Setting origin to %s\n",string);
-        }
+		}
 #endif
 
 	GetVectorForKey (mapent, "origin", mapent->origin);
 
 #ifdef SIN
 	if (
-         (!strcmp ("func_areaportal", ValueForKey (mapent, "classname"))) ||
-         (!strcmp ("func_group", ValueForKey (mapent, "classname"))) ||
-      	(!strcmp ("detail", ValueForKey (mapent, "classname")) && !entitydetails)
-      )
-      {
-      VectorClear( mapent->origin );
-      }
+		 (!strcmp ("func_areaportal", ValueForKey (mapent, "classname"))) ||
+		 (!strcmp ("func_group", ValueForKey (mapent, "classname"))) ||
+		(!strcmp ("detail", ValueForKey (mapent, "classname")) && !entitydetails)
+	  )
+	  {
+	  VectorClear( mapent->origin );
+	  }
 #endif
 
 	//
@@ -563,10 +548,10 @@ qboolean	Sin_ParseMapEntity (void)
 #ifdef SIN
 				s->texinfo = TexinfoForBrushTexture (&mapplanes[s->planenum],
 					&side_brushtextures[s-brushsides], mapent->origin, &side_newrefs[s-brushsides]);
-            // 
-            // save off lightinfo
-            //
-            s->lightinfo = LightinfoForBrushTexture (	&side_brushtextures[s-brushsides] );
+			//
+			// save off lightinfo
+			//
+			s->lightinfo = LightinfoForBrushTexture (	&side_brushtextures[s-brushsides] );
 #else
 				s->texinfo = TexinfoForBrushTexture (&mapplanes[s->planenum],
 					&side_brushtextures[s-brushsides], mapent->origin);
@@ -583,7 +568,7 @@ qboolean	Sin_ParseMapEntity (void)
 		MoveBrushesToWorld (mapent);
 		mapent->numbrushes = 0;
 		mapent->wasdetail = true;
-      FreeValueKeys( mapent );
+	  FreeValueKeys( mapent );
 		return true;
 	}
 #ifdef SIN
@@ -593,40 +578,40 @@ qboolean	Sin_ParseMapEntity (void)
 	{
 		for (i=0 ; i<mapent->numbrushes ; i++)
 		{
-         int j;
-         side_t * s;
+		 int j;
+		 side_t * s;
 			b = &mapbrushes[mapent->firstbrush + i];
-   	   if (nodetail)
-            {
-            b->numsides = 0;
-            continue;
-            }
-         if (!fulldetail)
-            {
-   	      // set the contents for the entire brush
-	         b->contents |= CONTENTS_DETAIL;
+	   if (nodetail)
+			{
+			b->numsides = 0;
+			continue;
+			}
+		 if (!fulldetail)
+			{
+		  // set the contents for the entire brush
+			 b->contents |= CONTENTS_DETAIL;
 			   // set the contents in the sides as well
 			   for (j=0, s=b->original_sides ; j<b->numsides ; j++,s++)
-		   	   {
-               s->contents |= CONTENTS_DETAIL;
-	   	   	}
-            }
-         else
-            {
-   	      // set the contents for the entire brush
-	         b->contents |= CONTENTS_SOLID;
+			   {
+			   s->contents |= CONTENTS_DETAIL;
+			}
+			}
+		 else
+			{
+		  // set the contents for the entire brush
+			 b->contents |= CONTENTS_SOLID;
 			   // set the contents in the sides as well
 			   for (j=0, s=b->original_sides ; j<b->numsides ; j++,s++)
-		   	   {
-               s->contents |= CONTENTS_SOLID;
-	   	   	}
-            }
+			   {
+			   s->contents |= CONTENTS_SOLID;
+			}
+			}
 		}
 		MoveBrushesToWorld (mapent);
 		mapent->wasdetail = true;
-      FreeValueKeys( mapent );
-      // kill off the entity
-   	// num_entities--;
+	  FreeValueKeys( mapent );
+	  // kill off the entity
+	// num_entities--;
 		return true;
 	}
 #endif
@@ -662,7 +647,7 @@ LoadMapFile
 ================
 * /
 void Sin_LoadMapFile (char *filename)
-{		
+{
 	int		i;
 #ifdef SIN
    int num_detailsides=0;
@@ -678,7 +663,7 @@ void Sin_LoadMapFile (char *filename)
 
 	nummapbrushsides = 0;
 	num_entities = 0;
-	
+
 	while (ParseMapEntity ())
 	{
 	}
@@ -693,25 +678,25 @@ void Sin_LoadMapFile (char *filename)
 	}
 #ifdef SIN
    for (j=0;  j<num_entities; j++)
-      {
+	  {
 	   for (i=0 ; i<entities[j].numbrushes ; i++)
-	      {
-         side_t * s;
-         mapbrush_t *b;
+		  {
+		 side_t * s;
+		 mapbrush_t *b;
 			b = &mapbrushes[entities[j].firstbrush + i];
-         if (b->numsides && b->contents & CONTENTS_DETAIL)
-            num_detailbrushes++;
-         else if (b->numsides)
-            num_worldbrushes++;
+		 if (b->numsides && b->contents & CONTENTS_DETAIL)
+			num_detailbrushes++;
+		 else if (b->numsides)
+			num_worldbrushes++;
 			for (k=0, s=b->original_sides ; k<b->numsides ; k++,s++)
 			   {
-            if (s->contents & CONTENTS_DETAIL)
-               num_detailsides++;
-            else
-               num_worldsides++;
+			if (s->contents & CONTENTS_DETAIL)
+			   num_detailsides++;
+			else
+			   num_worldsides++;
 			   }
-   	   }
-      }
+	   }
+	  }
 #endif
 
 	qprintf ("%5i brushes\n", nummapbrushes);
@@ -733,16 +718,14 @@ void Sin_LoadMapFile (char *filename)
 
 } //end of the function Sin_LoadMap */
 
-
-#ifdef ME		//Begin MAP loading from BSP file
+#ifdef ME // Begin MAP loading from BSP file
 //===========================================================================
 //
 // Parameter:				-
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void Sin_CreateMapTexinfo(void)
-{
+void Sin_CreateMapTexinfo(void) {
 	int i;
 	vec_t defaultvec[4] = {1, 0, 0, 0};
 
@@ -750,138 +733,126 @@ void Sin_CreateMapTexinfo(void)
 	memcpy(map_texinfo[0].vecs[1], defaultvec, sizeof(defaultvec));
 	map_texinfo[0].flags = 0;
 	map_texinfo[0].value = 0;
-	strcpy(map_texinfo[0].texture, "generic/misc/red");	//no texture
+	strcpy(map_texinfo[0].texture, "generic/misc/red"); // no texture
 	map_texinfo[0].nexttexinfo = -1;
-	for (i = 1; i < sin_numtexinfo; i++)
-	{
+	for (i = 1; i < sin_numtexinfo; i++) {
 		memcpy(map_texinfo[i].vecs, sin_texinfo[i].vecs, sizeof(float) * 2 * 4);
 		map_texinfo[i].flags = sin_texinfo[i].flags;
 		map_texinfo[i].value = 0;
 		strcpy(map_texinfo[i].texture, sin_texinfo[i].texture);
 		map_texinfo[i].nexttexinfo = -1;
-	} //end for
-} //end of the function Sin_CreateMapTexinfo
+	} // end for
+} // end of the function Sin_CreateMapTexinfo
 //===========================================================================
 //
 // Parameter:				-
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void Sin_SetLeafBrushesModelNumbers(int leafnum, int modelnum)
-{
+void Sin_SetLeafBrushesModelNumbers(int leafnum, int modelnum) {
 	int i, brushnum;
 	sin_dleaf_t *leaf;
 
 	leaf = &sin_dleafs[leafnum];
-	for (i = 0; i < leaf->numleafbrushes; i++)
-	{
+	for (i = 0; i < leaf->numleafbrushes; i++) {
 		brushnum = sin_dleafbrushes[leaf->firstleafbrush + i];
 		brushmodelnumbers[brushnum] = modelnum;
 		dbrushleafnums[brushnum] = leafnum;
-	} //end for
-} //end of the function Sin_SetLeafBrushesModelNumbers
+	} // end for
+} // end of the function Sin_SetLeafBrushesModelNumbers
 //===========================================================================
 //
 // Parameter:				-
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void Sin_InitNodeStack(void)
-{
+void Sin_InitNodeStack(void) {
 	nodestackptr = nodestack;
 	nodestacksize = 0;
-} //end of the function Sin_InitNodeStack
+} // end of the function Sin_InitNodeStack
 //===========================================================================
 //
 // Parameter:				-
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void Sin_PushNodeStack(int num)
-{
+void Sin_PushNodeStack(int num) {
 	*nodestackptr = num;
 	nodestackptr++;
 	nodestacksize++;
 	//
-	if (nodestackptr >= &nodestack[NODESTACKSIZE])
-	{
+	if (nodestackptr >= &nodestack[NODESTACKSIZE]) {
 		Error("Sin_PushNodeStack: stack overflow\n");
-	} //end if
-} //end of the function Sin_PushNodeStack
+	} // end if
+} // end of the function Sin_PushNodeStack
 //===========================================================================
 //
 // Parameter:				-
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-int Sin_PopNodeStack(void)
-{
-	//if the stack is empty
-	if (nodestackptr <= nodestack) return -1;
-	//decrease stack pointer
+int Sin_PopNodeStack(void) {
+	// if the stack is empty
+	if (nodestackptr <= nodestack)
+		return -1;
+	// decrease stack pointer
 	nodestackptr--;
 	nodestacksize--;
-	//return the top value from the stack
+	// return the top value from the stack
 	return *nodestackptr;
-} //end of the function Sin_PopNodeStack
+} // end of the function Sin_PopNodeStack
 //===========================================================================
 //
 // Parameter:				-
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void Sin_SetBrushModelNumbers(entity_t *mapent)
-{
+void Sin_SetBrushModelNumbers(entity_t *mapent) {
 	int n, pn;
 	int leafnum;
 
 	//
 	Sin_InitNodeStack();
-	//head node (root) of the bsp tree
+	// head node (root) of the bsp tree
 	n = sin_dmodels[mapent->modelnum].headnode;
 	pn = 0;
-	
-	do
-	{
-		//if we are in a leaf (negative node number)
-		if (n < 0)
-		{
-			//number of the leaf
+
+	do {
+		// if we are in a leaf (negative node number)
+		if (n < 0) {
+			// number of the leaf
 			leafnum = (-n) - 1;
-			//set the brush numbers
+			// set the brush numbers
 			Sin_SetLeafBrushesModelNumbers(leafnum, mapent->modelnum);
-			//walk back into the tree to find a second child to continue with
-			for (pn = Sin_PopNodeStack(); pn >= 0; n = pn, pn = Sin_PopNodeStack())
-			{
-				//if we took the first child at the parent node
-				if (sin_dnodes[pn].children[0] == n) break;
-			} //end for
-			//if the stack wasn't empty (if not processed whole tree)
-			if (pn >= 0)
-			{
-				//push the parent node again
+			// walk back into the tree to find a second child to continue with
+			for (pn = Sin_PopNodeStack(); pn >= 0; n = pn, pn = Sin_PopNodeStack()) {
+				// if we took the first child at the parent node
+				if (sin_dnodes[pn].children[0] == n)
+					break;
+			} // end for
+			// if the stack wasn't empty (if not processed whole tree)
+			if (pn >= 0) {
+				// push the parent node again
 				Sin_PushNodeStack(pn);
-				//we proceed with the second child of the parent node
+				// we proceed with the second child of the parent node
 				n = sin_dnodes[pn].children[1];
-			} //end if
-		} //end if
-		else
-		{
-			//push the current node onto the stack
+			} // end if
+		}	  // end if
+		else {
+			// push the current node onto the stack
 			Sin_PushNodeStack(n);
-			//walk forward into the tree to the first child
+			// walk forward into the tree to the first child
 			n = sin_dnodes[n].children[0];
-		} //end else
-	} while(pn >= 0);
-} //end of the function Sin_SetBrushModelNumbers
+		} // end else
+	} while (pn >= 0);
+} // end of the function Sin_SetBrushModelNumbers
 //===========================================================================
 //
 // Parameter:				-
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void Sin_BSPBrushToMapBrush(sin_dbrush_t *bspbrush, entity_t *mapent)
-{
+void Sin_BSPBrushToMapBrush(sin_dbrush_t *bspbrush, entity_t *mapent) {
 	mapbrush_t *b;
 	int i, k, n;
 	side_t *side, *s2;
@@ -890,150 +861,143 @@ void Sin_BSPBrushToMapBrush(sin_dbrush_t *bspbrush, entity_t *mapent)
 	sin_dplane_t *bspplane;
 
 	if (nummapbrushes >= MAX_MAPFILE_BRUSHES)
-		Error ("nummapbrushes >= MAX_MAPFILE_BRUSHES");
+		Error("nummapbrushes >= MAX_MAPFILE_BRUSHES");
 
 	b = &mapbrushes[nummapbrushes];
 	b->original_sides = &brushsides[nummapbrushsides];
-	b->entitynum = mapent-entities;
+	b->entitynum = mapent - entities;
 	b->brushnum = nummapbrushes - mapent->firstbrush;
 	b->leafnum = dbrushleafnums[bspbrush - sin_dbrushes];
 
-	for (n = 0; n < bspbrush->numsides; n++)
-	{
-		//pointer to the bsp brush side
+	for (n = 0; n < bspbrush->numsides; n++) {
+		// pointer to the bsp brush side
 		bspbrushside = &sin_dbrushsides[bspbrush->firstside + n];
 
-		if (nummapbrushsides >= MAX_MAPFILE_BRUSHSIDES)
-		{
-			Error ("MAX_MAPFILE_BRUSHSIDES");
-		} //end if
-		//pointer to the map brush side
+		if (nummapbrushsides >= MAX_MAPFILE_BRUSHSIDES) {
+			Error("MAX_MAPFILE_BRUSHSIDES");
+		} // end if
+		// pointer to the map brush side
 		side = &brushsides[nummapbrushsides];
-		//if the BSP brush side is textured
-		if (sin_dbrushsidetextured[bspbrush->firstside + n]) side->flags |= SFL_TEXTURED;
-		else side->flags &= ~SFL_TEXTURED;
-		//ME: can get side contents and surf directly from BSP file
+		// if the BSP brush side is textured
+		if (sin_dbrushsidetextured[bspbrush->firstside + n])
+			side->flags |= SFL_TEXTURED;
+		else
+			side->flags &= ~SFL_TEXTURED;
+		// ME: can get side contents and surf directly from BSP file
 		side->contents = bspbrush->contents;
-		//if the texinfo is TEXINFO_NODE
-		if (bspbrushside->texinfo < 0) side->surf = 0;
-		else side->surf = sin_texinfo[bspbrushside->texinfo].flags;
+		// if the texinfo is TEXINFO_NODE
+		if (bspbrushside->texinfo < 0)
+			side->surf = 0;
+		else
+			side->surf = sin_texinfo[bspbrushside->texinfo].flags;
 
 		// translucent objects are automatically classified as detail
-		if (side->surf & (SURF_TRANS33|SURF_TRANS66) )
+		if (side->surf & (SURF_TRANS33 | SURF_TRANS66))
 			side->contents |= CONTENTS_DETAIL;
-		if (side->contents & (CONTENTS_PLAYERCLIP|CONTENTS_MONSTERCLIP) )
+		if (side->contents & (CONTENTS_PLAYERCLIP | CONTENTS_MONSTERCLIP))
 			side->contents |= CONTENTS_DETAIL;
 		if (fulldetail)
 			side->contents &= ~CONTENTS_DETAIL;
-		if (!(side->contents & ((LAST_VISIBLE_CONTENTS-1) 
-			| CONTENTS_PLAYERCLIP|CONTENTS_MONSTERCLIP|CONTENTS_MIST)  ) )
+		if (!(side->contents &
+			  ((LAST_VISIBLE_CONTENTS - 1) | CONTENTS_PLAYERCLIP | CONTENTS_MONSTERCLIP | CONTENTS_MIST)))
 			side->contents |= CONTENTS_SOLID;
 
 		// hints and skips are never detail, and have no content
-		if (side->surf & (SURF_HINT|SURF_SKIP) )
-		{
+		if (side->surf & (SURF_HINT | SURF_SKIP)) {
 			side->contents = 0;
 			side->surf &= ~CONTENTS_DETAIL;
 		}
 
-		//ME: get a plane for this side
+		// ME: get a plane for this side
 		bspplane = &sin_dplanes[bspbrushside->planenum];
 		planenum = FindFloatPlane(bspplane->normal, bspplane->dist);
 		//
 		// see if the plane has been used already
 		//
-		//ME: this really shouldn't happen!!!
-		//ME: otherwise the bsp file is corrupted??
-		//ME: still it seems to happen, maybe Johny Boy's
-		//ME: brush bevel adding is crappy ?
-		for (k = 0; k < b->numsides; k++)
-		{
+		// ME: this really shouldn't happen!!!
+		// ME: otherwise the bsp file is corrupted??
+		// ME: still it seems to happen, maybe Johny Boy's
+		// ME: brush bevel adding is crappy ?
+		for (k = 0; k < b->numsides; k++) {
 			s2 = b->original_sides + k;
-			if (s2->planenum == planenum)
-			{
-				Log_Print("Entity %i, Brush %i: duplicate plane\n"
-					, b->entitynum, b->brushnum);
+			if (s2->planenum == planenum) {
+				Log_Print("Entity %i, Brush %i: duplicate plane\n", b->entitynum, b->brushnum);
 				break;
 			}
-			if ( s2->planenum == (planenum^1) )
-			{
-				Log_Print("Entity %i, Brush %i: mirrored plane\n"
-					, b->entitynum, b->brushnum);
+			if (s2->planenum == (planenum ^ 1)) {
+				Log_Print("Entity %i, Brush %i: mirrored plane\n", b->entitynum, b->brushnum);
 				break;
 			}
 		}
 		if (k != b->numsides)
-			continue;		// duplicated
+			continue; // duplicated
 
 		//
 		// keep this side
 		//
-		//ME: reset pointer to side, why? hell I dunno (pointer is set above already)
+		// ME: reset pointer to side, why? hell I dunno (pointer is set above already)
 		side = b->original_sides + b->numsides;
-		//ME: store the plane number
+		// ME: store the plane number
 		side->planenum = planenum;
-		//ME: texinfo is already stored when bsp is loaded
-		//NOTE: check for TEXINFO_NODE, otherwise crash in Sin_BrushContents
-		if (bspbrushside->texinfo < 0) side->texinfo = 0;
-		else side->texinfo = bspbrushside->texinfo;
+		// ME: texinfo is already stored when bsp is loaded
+		// NOTE: check for TEXINFO_NODE, otherwise crash in Sin_BrushContents
+		if (bspbrushside->texinfo < 0)
+			side->texinfo = 0;
+		else
+			side->texinfo = bspbrushside->texinfo;
 
 		// save the td off in case there is an origin brush and we
 		// have to recalculate the texinfo
 		// ME: don't need to recalculate because it's already done
 		//     (for non-world entities) in the BSP file
-//		side_brushtextures[nummapbrushsides] = td;
+		//		side_brushtextures[nummapbrushsides] = td;
 
 		nummapbrushsides++;
 		b->numsides++;
-	} //end for
+	} // end for
 
 	// get the content for the entire brush
 	b->contents = bspbrush->contents;
 	Sin_BrushContents(b);
 
-	if (BrushExists(b))
-	{
+	if (BrushExists(b)) {
 		c_squattbrushes++;
 		b->numsides = 0;
 		return;
-	} //end if
+	} // end if
 
-	//if we're creating AAS
-	if (create_aas)
-	{
-		//create the AAS brushes from this brush, don't add brush bevels
+	// if we're creating AAS
+	if (create_aas) {
+		// create the AAS brushes from this brush, don't add brush bevels
 		AAS_CreateMapBrushes(b, mapent, false);
 		return;
-	} //end if
+	} // end if
 
-	// allow detail brushes to be removed 
-	if (nodetail && (b->contents & CONTENTS_DETAIL) )
-	{
+	// allow detail brushes to be removed
+	if (nodetail && (b->contents & CONTENTS_DETAIL)) {
 		b->numsides = 0;
 		return;
-	} //end if
+	} // end if
 
 	// allow water brushes to be removed
-	if (nowater && (b->contents & (CONTENTS_LAVA | CONTENTS_SLIME | CONTENTS_WATER)) )
-	{
+	if (nowater && (b->contents & (CONTENTS_LAVA | CONTENTS_SLIME | CONTENTS_WATER))) {
 		b->numsides = 0;
 		return;
-	} //end if
+	} // end if
 
 	// create windings for sides and bounds for brush
 	MakeBrushWindings(b);
 
-	//mark brushes without winding or with a tiny window as bevels
+	// mark brushes without winding or with a tiny window as bevels
 	MarkBrushBevels(b);
 
 	// brushes that will not be visible at all will never be
 	// used as bsp splitters
-	if (b->contents & (CONTENTS_PLAYERCLIP|CONTENTS_MONSTERCLIP) )
-	{
-			c_clipbrushes++;
+	if (b->contents & (CONTENTS_PLAYERCLIP | CONTENTS_MONSTERCLIP)) {
+		c_clipbrushes++;
 		for (i = 0; i < b->numsides; i++)
 			b->original_sides[i].texinfo = TEXINFO_NODE;
-	} //end for
+	} // end for
 
 	//
 	// origin brushes are removed, but they set
@@ -1042,131 +1006,122 @@ void Sin_BSPBrushToMapBrush(sin_dbrush_t *bspbrush, entity_t *mapent)
 	// the planenums and texinfos will be adjusted for
 	// the origin brush
 	//
-	//ME: not needed because the entities in the BSP file already
+	// ME: not needed because the entities in the BSP file already
 	//    have an origin set
-//	if (b->contents & CONTENTS_ORIGIN)
-//	{
-//		char	string[32];
-//		vec3_t	origin;
-//
-//		if (num_entities == 1)
-//		{
-//			Error ("Entity %i, Brush %i: origin brushes not allowed in world"
-//				, b->entitynum, b->brushnum);
-//			return;
-//		}
-//
-//		VectorAdd (b->mins, b->maxs, origin);
-//		VectorScale (origin, 0.5, origin);
-//
-//		sprintf (string, "%i %i %i", (int)origin[0], (int)origin[1], (int)origin[2]);
-//		SetKeyValue (&entities[b->entitynum], "origin", string);
-//
-//		VectorCopy (origin, entities[b->entitynum].origin);
-//
-//		// don't keep this brush
-//		b->numsides = 0;
-//
-//		return;
-//	}
+	//	if (b->contents & CONTENTS_ORIGIN)
+	//	{
+	//		char	string[32];
+	//		vec3_t	origin;
+	//
+	//		if (num_entities == 1)
+	//		{
+	//			Error ("Entity %i, Brush %i: origin brushes not allowed in world"
+	//				, b->entitynum, b->brushnum);
+	//			return;
+	//		}
+	//
+	//		VectorAdd (b->mins, b->maxs, origin);
+	//		VectorScale (origin, 0.5, origin);
+	//
+	//		sprintf (string, "%i %i %i", (int)origin[0], (int)origin[1], (int)origin[2]);
+	//		SetKeyValue (&entities[b->entitynum], "origin", string);
+	//
+	//		VectorCopy (origin, entities[b->entitynum].origin);
+	//
+	//		// don't keep this brush
+	//		b->numsides = 0;
+	//
+	//		return;
+	//	}
 
-	//ME: the bsp brushes already have bevels, so we won't try to
-	//    add them again (especially since Johny Boy's bevel adding might
-	//    be crappy)
-//	AddBrushBevels(b);
+	// ME: the bsp brushes already have bevels, so we won't try to
+	//     add them again (especially since Johny Boy's bevel adding might
+	//     be crappy)
+	//	AddBrushBevels(b);
 
 	nummapbrushes++;
 	mapent->numbrushes++;
-} //end of the function Sin_BSPBrushToMapBrush
+} // end of the function Sin_BSPBrushToMapBrush
 //===========================================================================
 //===========================================================================
-void Sin_ParseBSPBrushes(entity_t *mapent)
-{
+void Sin_ParseBSPBrushes(entity_t *mapent) {
 	int i, testnum = 0;
 
-	//give all the brushes that belong to this entity the number of the
-	//BSP model used by this entity
+	// give all the brushes that belong to this entity the number of the
+	// BSP model used by this entity
 	Sin_SetBrushModelNumbers(mapent);
-	//now parse all the brushes with the correct mapent->modelnum
-	for (i = 0; i < sin_numbrushes; i++)
-	{
-		if (brushmodelnumbers[i] == mapent->modelnum)
-		{
+	// now parse all the brushes with the correct mapent->modelnum
+	for (i = 0; i < sin_numbrushes; i++) {
+		if (brushmodelnumbers[i] == mapent->modelnum) {
 			testnum++;
 			Sin_BSPBrushToMapBrush(&sin_dbrushes[i], mapent);
-		} //end if
-	} //end for
-} //end of the function Sin_ParseBSPBrushes
+		} // end if
+	}	  // end for
+} // end of the function Sin_ParseBSPBrushes
 //===========================================================================
 //===========================================================================
-qboolean Sin_ParseBSPEntity(int entnum)
-{
-	entity_t	*mapent;
+qboolean Sin_ParseBSPEntity(int entnum) {
+	entity_t *mapent;
 	char *model;
 
-	mapent = &entities[entnum];//num_entities];
+	mapent = &entities[entnum]; // num_entities];
 	mapent->firstbrush = nummapbrushes;
 	mapent->numbrushes = 0;
-	mapent->modelnum = -1;	//-1 = no model
+	mapent->modelnum = -1; //-1 = no model
 
 	model = ValueForKey(mapent, "model");
-	if (model && *model == '*')
-	{
+	if (model && *model == '*') {
 		mapent->modelnum = atoi(&model[1]);
-		//Log_Print("model = %s\n", model);
-		//Log_Print("mapent->modelnum = %d\n", mapent->modelnum);
-	} //end if
+		// Log_Print("model = %s\n", model);
+		// Log_Print("mapent->modelnum = %d\n", mapent->modelnum);
+	} // end if
 
 	GetVectorForKey(mapent, "origin", mapent->origin);
 
-	//if this is the world entity it has model number zero
-	//the world entity has no model key
-	if (!strcmp("worldspawn", ValueForKey(mapent, "classname")))
-	{
+	// if this is the world entity it has model number zero
+	// the world entity has no model key
+	if (!strcmp("worldspawn", ValueForKey(mapent, "classname"))) {
 		mapent->modelnum = 0;
-	} //end if
-	//if the map entity has a BSP model (a modelnum of -1 is used for
-	//entities that aren't using a BSP model)
-	if (mapent->modelnum >= 0)
-	{
-		//parse the bsp brushes
+	} // end if
+	// if the map entity has a BSP model (a modelnum of -1 is used for
+	// entities that aren't using a BSP model)
+	if (mapent->modelnum >= 0) {
+		// parse the bsp brushes
 		Sin_ParseBSPBrushes(mapent);
-	} //end if
+	} // end if
 	//
-	//the origin of the entity is already taken into account
+	// the origin of the entity is already taken into account
 	//
-	//func_group entities can't be in the bsp file
+	// func_group entities can't be in the bsp file
 	//
-	//check out the func_areaportal entities
-	if (!strcmp ("func_areaportal", ValueForKey (mapent, "classname")))
-	{
+	// check out the func_areaportal entities
+	if (!strcmp("func_areaportal", ValueForKey(mapent, "classname"))) {
 		c_areaportals++;
 		mapent->areaportalnum = c_areaportals;
 		return true;
-	} //end if
+	} // end if
 	return true;
-} //end of the function Sin_ParseBSPEntity
+} // end of the function Sin_ParseBSPEntity
 //===========================================================================
 //
 // Parameter:				-
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void Sin_LoadMapFromBSP(char *filename, int offset, int length)
-{
+void Sin_LoadMapFromBSP(char *filename, int offset, int length) {
 	int i;
 
 	Log_Print("-- Sin_LoadMapFromBSP --\n");
-	//loaded map type
+	// loaded map type
 	loadedmaptype = MAPTYPE_SIN;
 
 	Log_Print("Loading map from %s...\n", filename);
-	//load the bsp file
+	// load the bsp file
 	Sin_LoadBSPFile(filename, offset, length);
 
-	//create an index from bsp planes to map planes
-	//DPlanes2MapPlanes();
-	//clear brush model numbers
+	// create an index from bsp planes to map planes
+	// DPlanes2MapPlanes();
+	// clear brush model numbers
 	for (i = 0; i < MAX_MAPFILE_BRUSHES; i++)
 		brushmodelnumbers[i] = -1;
 
@@ -1175,33 +1130,30 @@ void Sin_LoadMapFromBSP(char *filename, int offset, int length)
 
 	Sin_ParseEntities();
 	//
-	for (i = 0; i < num_entities; i++)
-	{
+	for (i = 0; i < num_entities; i++) {
 		Sin_ParseBSPEntity(i);
-	} //end for
+	} // end for
 
-	//get the map mins and maxs from the world model
+	// get the map mins and maxs from the world model
 	ClearBounds(map_mins, map_maxs);
-	for (i = 0; i < entities[0].numbrushes; i++)
-	{
+	for (i = 0; i < entities[0].numbrushes; i++) {
 		if (mapbrushes[i].mins[0] > 4096)
-			continue;	//no valid points
-		AddPointToBounds (mapbrushes[i].mins, map_mins, map_maxs);
-		AddPointToBounds (mapbrushes[i].maxs, map_mins, map_maxs);
-	} //end for
+			continue; // no valid points
+		AddPointToBounds(mapbrushes[i].mins, map_mins, map_maxs);
+		AddPointToBounds(mapbrushes[i].maxs, map_mins, map_maxs);
+	} // end for
 	//
 	Sin_CreateMapTexinfo();
-} //end of the function Sin_LoadMapFromBSP
+} // end of the function Sin_LoadMapFromBSP
 
-void Sin_ResetMapLoading(void)
-{
-	//reset for map loading from bsp
+void Sin_ResetMapLoading(void) {
+	// reset for map loading from bsp
 	memset(nodestack, 0, NODESTACKSIZE * sizeof(int));
 	nodestackptr = NULL;
 	nodestacksize = 0;
 	memset(brushmodelnumbers, 0, MAX_MAPFILE_BRUSHES * sizeof(int));
-} //end of the function Sin_ResetMapLoading
+} // end of the function Sin_ResetMapLoading
 
-//End MAP loading from BSP file
+// End MAP loading from BSP file
 
-#endif //ME
+#endif // ME

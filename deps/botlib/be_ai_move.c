@@ -771,7 +771,7 @@ int BotGetReachabilityToGoal(vec3_t origin, int areanum, int lastgoalareanum, in
 			continue;
 		} // end if
 #endif	  // AVOIDREACH
-	   // get the reachability from the number
+		  // get the reachability from the number
 		AAS_ReachabilityFromNum(reachnum, &reach);
 		// NOTE: do not go back to the previous area if the goal didn't change
 		// NOTE: is this actually avoidance of local routing minima between two areas???
@@ -3233,15 +3233,15 @@ void BotMoveToGoal(bot_moveresult_t *result, int movestate, bot_goal_t *goal, in
 						AAS_PrintTravelType(reach.traveltype & TRAVELTYPE_MASK);
 						botimport.Print(PRT_MESSAGE, "\n");
 					} // end if
-					/*
-					if (ms->lastareanum != ms->areanum)
-					{
-						botimport.Print(PRT_MESSAGE, "changed from area %d to %d\n", ms->lastareanum, ms->areanum);
-					} //end if*/
-				} // end if
-#endif			  // DEBUG
-	   // if the goal area changed or the reachability timed out
-	   // or the area changed
+					  /*
+					  if (ms->lastareanum != ms->areanum)
+					  {
+						  botimport.Print(PRT_MESSAGE, "changed from area %d to %d\n", ms->lastareanum, ms->areanum);
+					  } //end if*/
+				}	  // end if
+#endif				  // DEBUG
+				// if the goal area changed or the reachability timed out
+				// or the area changed
 				if (ms->lastgoalareanum != goal->areanum || ms->reachability_time < AAS_Time() ||
 					ms->lastareanum != ms->areanum) {
 					reachnum = 0;

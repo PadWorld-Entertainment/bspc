@@ -65,14 +65,14 @@ void AAS_ClearShownPolygons(void) {
 			botimport.DebugPolygonDelete(debugpolygons[i]);
 		debugpolygons[i] = 0;
 	} // end for
-	//*/
-	/*
-		for (i = 0; i < MAX_DEBUGPOLYGONS; i++)
-		{
-			botimport.DebugPolygonDelete(i);
-			debugpolygons[i] = 0;
-		} //end for
-	*/
+	  //*/
+	  /*
+		  for (i = 0; i < MAX_DEBUGPOLYGONS; i++)
+		  {
+			  botimport.DebugPolygonDelete(i);
+			  debugpolygons[i] = 0;
+		  } //end for
+	  */
 } // end of the function AAS_ClearShownPolygons
 //===========================================================================
 //
@@ -401,8 +401,8 @@ void AAS_ShowArea(int areanum, int groundfacesonly) {
 				areaedges[numareaedges++] = edgenum;
 			} // end if
 		}	  // end for
-		// AAS_ShowFace(facenum);
-	} // end for
+			  // AAS_ShowFace(facenum);
+	}		  // end for
 	// draw all the edges
 	for (n = 0; n < numareaedges; n++) {
 		for (line = 0; line < MAX_DEBUGLINES; line++) {

@@ -485,8 +485,8 @@ aas_trace_t AAS_TraceClientBBox(vec3_t start, vec3_t end, int presencetype, int 
 				return trace;
 			} // end if
 #endif		  // AAS_SAMPLE_DEBUG
-	   // botimport.Print(PRT_MESSAGE, "areanum = %d, must be %d\n", -nodenum, AAS_PointAreaNum(start));
-	   // if can't enter the area because it hasn't got the right presence type
+			  // botimport.Print(PRT_MESSAGE, "areanum = %d, must be %d\n", -nodenum, AAS_PointAreaNum(start));
+			  // if can't enter the area because it hasn't got the right presence type
 			if (!(aasworld.areasettings[-nodenum].presencetype & presencetype)) {
 				// if the start point is still the initial start point
 				// NOTE: no need for epsilons because the points will be
@@ -565,7 +565,7 @@ aas_trace_t AAS_TraceClientBBox(vec3_t start, vec3_t end, int presencetype, int 
 			return trace;
 		} // end if
 #endif	  // AAS_SAMPLE_DEBUG
-	   // the node to test against
+		  // the node to test against
 		aasnode = &aasworld.nodes[nodenum];
 		// start point of current line to test against node
 		VectorCopy(tstack_p->start, cur_start);
@@ -678,7 +678,7 @@ aas_trace_t AAS_TraceClientBBox(vec3_t start, vec3_t end, int presencetype, int 
 			} // end if
 		}	  // end else
 	}		  // end while
-	//	return trace;
+			  //	return trace;
 } // end of the function AAS_TraceClientBBox
 //===========================================================================
 // recursive subdivision of the line by the BSP tree.
@@ -729,7 +729,7 @@ int AAS_TraceAreas(vec3_t start, vec3_t end, int *areas, vec3_t *points, int max
 				return numareas;
 			} // end if
 #endif		  // AAS_SAMPLE_DEBUG
-	   // botimport.Print(PRT_MESSAGE, "areanum = %d, must be %d\n", -nodenum, AAS_PointAreaNum(start));
+			  // botimport.Print(PRT_MESSAGE, "areanum = %d, must be %d\n", -nodenum, AAS_PointAreaNum(start));
 			areas[numareas] = -nodenum;
 			if (points)
 				VectorCopy(tstack_p->start, points[numareas]);
@@ -748,7 +748,7 @@ int AAS_TraceAreas(vec3_t start, vec3_t end, int *areas, vec3_t *points, int max
 			return numareas;
 		} // end if
 #endif	  // AAS_SAMPLE_DEBUG
-	   // the node to test against
+		  // the node to test against
 		aasnode = &aasworld.nodes[nodenum];
 		// start point of current line to test against node
 		VectorCopy(tstack_p->start, cur_start);
@@ -857,7 +857,7 @@ int AAS_TraceAreas(vec3_t start, vec3_t end, int *areas, vec3_t *points, int max
 			} // end if
 		}	  // end else
 	}		  // end while
-	//	return numareas;
+			  //	return numareas;
 } // end of the function AAS_TraceAreas
 //===========================================================================
 // a simple cross product

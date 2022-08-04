@@ -668,7 +668,7 @@ void PC_AddBuiltinDefines(source_t *source) {
 // Changes Globals:		-
 //============================================================================
 static int PC_ExpandBuiltinDefine(source_t *source, token_t *deftoken, define_t *define, token_t **firsttoken,
-						   token_t **lasttoken) {
+								  token_t **lasttoken) {
 	token_t *token;
 	unsigned long t; //	time_t t; //to prevent LCC warning
 	char *curtime;
@@ -737,7 +737,8 @@ static int PC_ExpandBuiltinDefine(source_t *source, token_t *deftoken, define_t 
 // Returns:					-
 // Changes Globals:		-
 //============================================================================
-static int PC_ExpandDefine(source_t *source, token_t *deftoken, define_t *define, token_t **firsttoken, token_t **lasttoken) {
+static int PC_ExpandDefine(source_t *source, token_t *deftoken, define_t *define, token_t **firsttoken,
+						   token_t **lasttoken) {
 	token_t *parms[MAX_DEFINEPARMS] = {NULL}, *dt, *pt, *t;
 	token_t *t1, *t2, *first, *last, *nextpt, token;
 	int parmnum, i;
@@ -1106,7 +1107,7 @@ static int PC_Directive_define(source_t *source) {
 		SourceError(source, "expected name after #define, found %s", token.string);
 		return qfalse;
 	} // end if
-	// check if the define already exists
+	  // check if the define already exists
 #if DEFINEHASHING
 	define = PC_FindHashedDefine(source->definehash, token.string);
 #else
@@ -1259,7 +1260,7 @@ static define_t *PC_DefineFromString(const char *string) {
 #else
 	def = src.defines;
 #endif // DEFINEHASHING
-	//
+	   //
 #if DEFINEHASHING
 	FreeMemory(src.definehash);
 #endif // DEFINEHASHING
@@ -1753,7 +1754,7 @@ int PC_EvaluateTokens(source_t *source, token_t *tokens, signed long int *intval
 					break;
 				} // end if
 			}	  // end case
-			// fall through
+				// fall through
 
 			case P_MUL:
 			case P_DIV:

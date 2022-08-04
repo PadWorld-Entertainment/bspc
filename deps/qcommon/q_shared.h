@@ -224,8 +224,8 @@ typedef int clipHandle_t;
 
 // paramters for command buffer stuffing
 typedef enum {
-	EXEC_NOW,	 // don't return until completed, a VM should NEVER use this,
-				 // because some commands might cause the VM to be unloaded...
+	EXEC_NOW, // don't return until completed, a VM should NEVER use this,
+			  // because some commands might cause the VM to be unloaded...
 	EXEC_INSERT, // insert at current position, but don't run yet
 	EXEC_APPEND	 // add to end of the command buffer (normal case)
 } cbufExec_t;
@@ -773,15 +773,18 @@ default values.
 ==========================================================
 */
 
-#define CVAR_ARCHIVE 0x0001		 // set to cause it to be saved to vars.rc
-								 // used for system variables, not for player
-								 // specific configurations
-#define CVAR_USERINFO 0x0002	 // sent to server on connect or change
-#define CVAR_SERVERINFO 0x0004	 // sent in response to front end requests
-#define CVAR_SYSTEMINFO 0x0008	 // these cvars will be duplicated on all clients
-#define CVAR_INIT 0x0010		 // don't allow change from console at all,
-								 // but can be set from the command line
-#define CVAR_LATCH 0x0020		 // will only change when C code next does
+#define CVAR_ARCHIVE                                                                                                   \
+	0x0001					   // set to cause it to be saved to vars.rc
+							   // used for system variables, not for player
+							   // specific configurations
+#define CVAR_USERINFO 0x0002   // sent to server on connect or change
+#define CVAR_SERVERINFO 0x0004 // sent in response to front end requests
+#define CVAR_SYSTEMINFO 0x0008 // these cvars will be duplicated on all clients
+#define CVAR_INIT                                                                                                      \
+	0x0010 // don't allow change from console at all,
+		   // but can be set from the command line
+#define CVAR_LATCH                                                                                                     \
+	0x0020						 // will only change when C code next does
 								 // a Cvar_Get(), so it can't be changed
 								 // without proper initialization.  modified
 								 // will be set, even though the value hasn't

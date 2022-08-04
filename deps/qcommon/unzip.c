@@ -2722,7 +2722,7 @@ void inflate_set_dictionary(inflate_blocks_statef *s, const Byte *d, uInt n)
 }
 
 /* Returns true if inflate is currently at the end of a block generated
- * by Z_SYNC_FLUSH or Z_FULL_FLUSH. 
+ * by Z_SYNC_FLUSH or Z_FULL_FLUSH.
  * IN assertion: s != Z_NULL
  */
 int inflate_blocks_sync_point(inflate_blocks_statef *s)

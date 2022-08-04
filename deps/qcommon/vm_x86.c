@@ -1055,7 +1055,7 @@ void VM_Compile(vm_t *vm, vmHeader_t *header) {
 
 		addr = ((int)vm->codeBase & ~(psize-1)) - psize;
 
-		r = mprotect((char*)addr, vm->codeLength + (int)vm->codeBase - addr + psize, 
+		r = mprotect((char*)addr, vm->codeLength + (int)vm->codeBase - addr + psize,
 			PROT_READ | PROT_WRITE | PROT_EXEC );
 
 		if (r < 0)

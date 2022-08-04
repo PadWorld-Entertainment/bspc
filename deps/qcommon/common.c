@@ -2787,7 +2787,7 @@ void _copyDWord(unsigned int *dest, const unsigned int constant, const unsigned 
 			sub		ecx,8
 			jmp		loopu
 			align	16
-loopu:		
+loopu:
 			test	[edx+ecx*4 + 28],ebx // fetch next block destination to L1 cache
 			mov		[edx+ecx*4 + 0],eax
 			mov		[edx+ecx*4 + 4],eax
@@ -2842,7 +2842,7 @@ void Com_Memcpy(void *dest, const void *src, const size_t count) {
 		cmp		ecx,32 // padding only?
 		jl		padding
 
-		mov		edi,ecx					
+		mov		edi,ecx
 		and		edi,~31 // edi = count&~31
 		sub		edi,32
 
@@ -2866,7 +2866,7 @@ loopMisAligned:
 		mov		[edx+edi+4 + 3*8],esi
 		sub		edi,32
 		jge		loopMisAligned
-		
+
 		mov		edi,ecx
 		and		edi,~31
 		add		ebx,edi // increase src pointer
@@ -2979,10 +2979,10 @@ void Com_Memset(void *dest, const int val, const size_t count) {
 		jl		skipB
 		mov		word ptr [ebx],ax
 		cmp		ecx,2
-		je		skipA					
-		mov		byte ptr [ebx+2],al		
+		je		skipA
+		mov		byte ptr [ebx+2],al
 		jmp		skipA
-skipB:		
+skipB:
 		cmp		ecx,0
 		je		skipA
 		mov		byte ptr [ebx],al
