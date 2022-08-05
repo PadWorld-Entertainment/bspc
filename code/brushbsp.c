@@ -205,7 +205,7 @@ void WriteBrushList(char *name, bspbrush_t *brush, qboolean onlyvis) {
 void PrintBrush(bspbrush_t *brush) {
 	int i;
 
-	printf("brush: %p\n", brush);
+	printf("brush: %p\n", (const void*)brush);
 	for (i = 0; i < brush->numsides; i++) {
 		pw(brush->sides[i].winding);
 		printf("\n");
