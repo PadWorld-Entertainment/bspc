@@ -142,7 +142,7 @@ extern qboolean archive;
 extern char archivedir[1024];
 
 extern qboolean verbose;
-void qprintf(char *format, ...) __attribute__((format(printf, 1, 2)));;
+void qprintf(char *format, ...) __attribute__((format(printf, 1, 2)));
 
 void ExpandWildcards(int *argc, char ***argv);
 

@@ -1,4 +1,2 @@
-bspc_g
-/bspcwop*
 *.log
-*.o
+build/
