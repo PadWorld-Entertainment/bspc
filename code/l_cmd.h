@@ -25,6 +25,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define SIN
 #endif // SIN
 
+#ifndef __GNUC__
+#define __attribute__(x)
+#endif
+
 #ifndef __CMDLIB__
 #define __CMDLIB__
 
