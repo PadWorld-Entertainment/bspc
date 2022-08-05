@@ -44,11 +44,7 @@ set(SRCS
 	code/csg.c
 	code/glfile.c
 	code/l_bsp_ent.c
-	code/l_bsp_hl.c
-	code/l_bsp_q1.c
-	code/l_bsp_q2.c
 	code/l_bsp_q3.c
-	code/l_bsp_sin.c
 	code/l_cmd.c
 	code/l_log.c
 	code/l_math.c
@@ -59,18 +55,14 @@ set(SRCS
 	code/l_utils.c
 	code/leakfile.c
 	code/map.c
-	code/map_hl.c
-	code/map_q1.c
-	code/map_q2.c
 	code/map_q3.c
-	code/map_sin.c
 	code/nodraw.c
 	code/portals.c
 	code/textures.c
 	code/tree.c
 )
 if (UNIX)
-	add_compile_options(-Wall -Wextra -pedantic -Wno-unused-parameter -Wno-format-overflow -Wno-cast-function-type)
+	add_compile_options(-Wall -Wextra -pedantic -Wno-sign-compare -Wno-unused-parameter -Wno-format-overflow -Wno-cast-function-type)
 endif()
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -g -O3 -ffast-math -DNDEBUG")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -O0 -ffast-math -DDEBUG")

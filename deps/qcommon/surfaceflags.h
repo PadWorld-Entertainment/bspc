@@ -55,6 +55,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define CONTENTS_CORPSE 0x4000000
 #define CONTENTS_DETAIL 0x8000000		// brushes not used for the bsp
 #define CONTENTS_STRUCTURAL 0x10000000	// brushes used for the bsp
+#define CONTENTS_LADDER 0x20000000
 #define CONTENTS_TRANSLUCENT 0x20000000 // don't consume surface fragments inside
 #define CONTENTS_TRIGGER 0x40000000
 #define CONTENTS_NODROP 0x80000000 // don't leave bodies or items (death fog, lava)

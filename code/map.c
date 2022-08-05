@@ -21,11 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "qbsp.h"
-#include "l_bsp_hl.h"
-#include "l_bsp_q1.h"
-#include "l_bsp_q2.h"
+#include "qfiles.h"
 #include "l_bsp_q3.h"
-#include "l_bsp_sin.h"
 #include "l_mem.h"
 #include "botlib/aasfile.h" //aas_bbox_t
 #include "aas_store.h"		//AAS_MAX_BBOXES
@@ -660,15 +657,7 @@ qboolean WriteMapBrush(FILE *fp, mapbrush_t *brush, vec3_t origin) {
 			if (s->texinfo == TEXINFO_NODE) {
 				if (brush->contents & CONTENTS_PLAYERCLIP) {
 					// player clip
-					if (loadedmaptype == MAPTYPE_SIN) {
-						if (fprintf(fp, "generic/misc/clip 0 0 0 1 1") < 0)
-							return false;
-					}											// end if
-					else if (loadedmaptype == MAPTYPE_QUAKE2) { // FIXME: don't always use e1u1
-						if (fprintf(fp, "e1u1/clip 0 0 0 1 1") < 0)
-							return false;
-					} // end else
-					else if (loadedmaptype == MAPTYPE_QUAKE3) {
+					if (loadedmaptype == MAPTYPE_QUAKE3) {
 						if (fprintf(fp, "e1u1/clip 0 0 0 1 1") < 0)
 							return false;
 					} // end else if
@@ -678,39 +667,13 @@ qboolean WriteMapBrush(FILE *fp, mapbrush_t *brush, vec3_t origin) {
 					} // end else
 				}	  // end if
 				else if (brush->contents == CONTENTS_MONSTERCLIP) {
-					// monster clip
-					if (loadedmaptype == MAPTYPE_SIN) {
-						if (fprintf(fp, "generic/misc/monster 0 0 0 1 1") < 0)
-							return false;
-					} // end if
-					else if (loadedmaptype == MAPTYPE_QUAKE2) {
-						if (fprintf(fp, "e1u1/clip_mon 0 0 0 1 1") < 0)
-							return false;
-					} // end else
-					else {
-						if (fprintf(fp, "clip 0 0 0 1 1") < 0)
-							return false;
-					} // end else
+					if (fprintf(fp, "clip 0 0 0 1 1") < 0)
+						return false;
 				}	  // end else
 				else {
 					if (fprintf(fp, "clip 0 0 0 1 1") < 0)
 						return false;
 					Log_Write("brush->contents = %d\n", brush->contents);
-				} // end else
-			}	  // end if
-			else if (loadedmaptype == MAPTYPE_SIN && s->texinfo == 0) {
-				if (brush->contents & CONTENTS_DUMMYFENCE) {
-					if (fprintf(fp, "generic/misc/fence 0 0 0 1 1") < 0)
-						return false;
-				} // end if
-				else if (brush->contents & CONTENTS_MIST) {
-					if (fprintf(fp, "generic/misc/volumetric_base 0 0 0 1 1") < 0)
-						return false;
-				}	 // end if
-				else // unknown so far
-				{
-					if (fprintf(fp, "generic/misc/red 0 0 0 1 1") < 0)
-						return false;
 				} // end else
 			}	  // end if
 			else if (loadedmaptype == MAPTYPE_QUAKE3) {
@@ -786,11 +749,6 @@ qboolean WriteMapBrush(FILE *fp, mapbrush_t *brush, vec3_t origin) {
 					if (fprintf(fp, " %4f", scale[1]) < 0)
 						return false;
 				} // end else
-				// write the extra brush side info
-				if (loadedmaptype == MAPTYPE_QUAKE2) {
-					if (fprintf(fp, " %d %d %d", s->contents, ti->flags, ti->value) < 0)
-						return false;
-				} // end if
 				//*/
 			} // end else
 			if (fprintf(fp, "\n") < 0)
@@ -834,25 +792,8 @@ qboolean WriteOriginBrush(FILE *fp, vec3_t origin) {
 				return false;
 			// free the winding
 			FreeWinding(w);
-			// write origin texture:
-			//  CONTENTS_ORIGIN = 16777216
-			//  SURF_NODRAW = 128
-			if (loadedmaptype == MAPTYPE_SIN) {
-				if (fprintf(fp, "generic/misc/origin 0 0 0 1 1") < 0)
-					return false;
-			} // end if
-			else if (loadedmaptype == MAPTYPE_HALFLIFE) {
-				if (fprintf(fp, "origin 0 0 0 1 1") < 0)
-					return false;
-			} // end if
-			else {
-				if (fprintf(fp, "e1u1/origin 0 0 0 1 1") < 0)
-					return false;
-			} // end else
-			// Quake2 extra brush side info
-			if (loadedmaptype == MAPTYPE_QUAKE2) {
-				// if (fprintf(fp, " 16777216 128 0") < 0) return false;
-			} // end if
+			if (fprintf(fp, "e1u1/origin 0 0 0 1 1") < 0)
+				return false;
 			if (fprintf(fp, "\n") < 0)
 				return false;
 		} // end for
@@ -919,10 +860,6 @@ qboolean WriteMapFileSafe(FILE *fp) {
 					"// your legal advisor.\n"
 					"//\n") < 0)
 		return false;
-	if (loadedmaptype == MAPTYPE_SIN) {
-		if (fprintf(fp, "// generic/misc/red is used for unknown textures\n") < 0)
-			return false;
-	} // end if
 	if (fprintf(fp, "//\n"
 					"//=====================================================\n") < 0)
 		return false;
@@ -946,20 +883,14 @@ qboolean WriteMapFileSafe(FILE *fp) {
 			StripTrailing(key);
 			strcpy(value, ep->value);
 			StripTrailing(value);
-			//
-			if (loadedmaptype == MAPTYPE_QUAKE2 || loadedmaptype == MAPTYPE_SIN) {
-				// don't write an origin for BSP models
-				if (mapent->modelnum >= 0 && !strcmp(key, "origin"))
-					continue;
-			} // end if
 			// don't write BSP model numbers
 			if (mapent->modelnum >= 0 && !strcmp(key, "model") && value[0] == '*')
 				continue;
-			//
+
 			if (fprintf(fp, " \"%s\" \"%s\"\n", key, value) < 0)
 				return false;
 		} // end for
-		//
+
 		if (ValueForKey(mapent, "origin"))
 			GetVectorForKey(mapent, "origin", mapent->origin);
 		else
@@ -1073,9 +1004,6 @@ void ResetMapLoading(void) {
 	int i;
 	epair_t *ep, *nextep;
 
-	Q2_ResetMapLoading();
-	Sin_ResetMapLoading();
-
 	// free all map brush side windings
 	for (i = 0; i < nummapbrushsides; i++) {
 		if (brushsides[i].winding) {
@@ -1125,21 +1053,6 @@ void ResetMapLoading(void) {
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-#ifndef Q1_BSPVERSION
-#define Q1_BSPVERSION 29
-#endif
-#ifndef HL_BSPVERSION
-#define HL_BSPVERSION 30
-#endif
-
-#define Q2_BSPHEADER (('P' << 24) + ('S' << 16) + ('B' << 8) + 'I') // IBSP
-#define Q2_BSPVERSION 38
-
-#define SINGAME_BSPHEADER (('P' << 24) + ('S' << 16) + ('B' << 8) + 'R') // RBSP
-#define SINGAME_BSPVERSION 1
-
-#define SIN_BSPHEADER (('P' << 24) + ('S' << 16) + ('B' << 8) + 'I') // IBSP
-#define SIN_BSPVERSION 41
 
 typedef struct {
 	int ident;
@@ -1155,53 +1068,11 @@ int LoadMapFromBSP(struct quakefile_s *qf) {
 
 	idheader.ident = LittleLong(idheader.ident);
 	idheader.version = LittleLong(idheader.version);
-	// QuakeLive BSP file
-	if (idheader.ident == QL_BSP_IDENT && idheader.version == QL_BSP_VERSION) {
-		ResetMapLoading();
-		Q3_LoadMapFromBSP(qf);
-		Q3_FreeMaxBSP();
-	} // end if
-	// Qfusion BSP file
-	else if (idheader.ident == QF_BSP_IDENT && idheader.version == QF_BSP_VERSION) {
-		ResetMapLoading();
-		Q3_LoadMapFromBSP(qf);
-		Q3_FreeMaxBSP();
-	} // end if
 	// Quake3 BSP file
-	else if (idheader.ident == Q3_BSP_IDENT && idheader.version == Q3_BSP_VERSION) {
+	if (idheader.ident == Q3_BSP_IDENT && idheader.version == Q3_BSP_VERSION) {
 		ResetMapLoading();
 		Q3_LoadMapFromBSP(qf);
 		Q3_FreeMaxBSP();
-	} // end if
-	// Quake2 BSP file
-	else if (idheader.ident == Q2_BSPHEADER && idheader.version == Q2_BSPVERSION) {
-		ResetMapLoading();
-		Q2_AllocMaxBSP();
-		Q2_LoadMapFromBSP(qf->filename, qf->offset, qf->length);
-		Q2_FreeMaxBSP();
-	} // endif
-	// Sin BSP file
-	else if ((idheader.ident == SIN_BSPHEADER && idheader.version == SIN_BSPVERSION) ||
-			 // the dorks gave the same format another ident and verions
-			 (idheader.ident == SINGAME_BSPHEADER && idheader.version == SINGAME_BSPVERSION)) {
-		ResetMapLoading();
-		Sin_AllocMaxBSP();
-		Sin_LoadMapFromBSP(qf->filename, qf->offset, qf->length);
-		Sin_FreeMaxBSP();
-	} // end if
-	// the Quake1 bsp files don't have a ident only a version
-	else if (idheader.ident == Q1_BSPVERSION) {
-		ResetMapLoading();
-		Q1_AllocMaxBSP();
-		Q1_LoadMapFromBSP(qf->filename, qf->offset, qf->length);
-		Q1_FreeMaxBSP();
-	} // end if
-	// Half-Life also only uses a version number
-	else if (idheader.ident == HL_BSPVERSION) {
-		ResetMapLoading();
-		HL_AllocMaxBSP();
-		HL_LoadMapFromBSP(qf->filename, qf->offset, qf->length);
-		HL_FreeMaxBSP();
 	} // end if
 	else {
 		Error("unknown BSP format %c%c%c%c, version %d\n", (idheader.ident & 0xFF), ((idheader.ident >> 8) & 0xFF),

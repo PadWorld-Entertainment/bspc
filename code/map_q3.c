@@ -30,8 +30,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "qcommon/cm_patch.h"
 #include "qcommon/surfaceflags.h"
 
-#define NODESTACKSIZE 1024
-
 //===========================================================================
 //
 // Parameter:			-
@@ -117,26 +115,16 @@ int Q3_BrushContents(mapbrush_t *b) {
 	return contents;
 } // end of the function Q3_BrushContents
 #define BBOX_NORMAL_EPSILON 0.0001
-//===========================================================================
-//
-// Parameter:			-
-// Returns:				-
-// Changes Globals:		-
-//===========================================================================
-void Q3_DPlanes2MapPlanes(void) {
-	int i;
 
-	for (i = 0; i < q3_numplanes; i++) {
-		dplanes2mapplanes[i] = FindFloatPlane(q3_dplanes[i].normal, q3_dplanes[i].dist);
-	} // end for
-} // end of the function Q3_DPlanes2MapPlanes
+static int dbrushleafnums[MAX_MAPFILE_BRUSHES];
+
 //===========================================================================
 //
 // Parameter:			-
 // Returns:				-
 // Changes Globals:		-
 //===========================================================================
-void Q3_BSPBrushToMapBrush(q3_dbrush_t *bspbrush, entity_t *mapent) {
+static void Q3_BSPBrushToMapBrush(q3_dbrush_t *bspbrush, entity_t *mapent) {
 	mapbrush_t *b;
 	int i, k, n;
 	side_t *side, *s2;
@@ -348,7 +336,7 @@ void Q3_BSPBrushToMapBrush(q3_dbrush_t *bspbrush, entity_t *mapent) {
 // Returns:				-
 // Changes Globals:		-
 //===========================================================================
-void Q3_ParseBSPBrushes(entity_t *mapent) {
+static void Q3_ParseBSPBrushes(entity_t *mapent) {
 	int i;
 
 	for (i = 0; i < q3_dmodels[mapent->modelnum].numBrushes; i++) {
@@ -361,7 +349,7 @@ void Q3_ParseBSPBrushes(entity_t *mapent) {
 // Returns:				-
 // Changes Globals:		-
 //===========================================================================
-qboolean Q3_ParseBSPEntity(int entnum) {
+static qboolean Q3_ParseBSPEntity(int entnum) {
 	entity_t *mapent;
 	char *model;
 
@@ -573,12 +561,6 @@ void Q3_LoadMapFromBSP(struct quakefile_s *qf) {
 	// load the bsp file
 	Q3_LoadBSPFile(qf);
 
-	// create an index from bsp planes to map planes
-	// DPlanes2MapPlanes();
-	// clear brush model numbers
-	for (i = 0; i < MAX_MAPFILE_BRUSHES; i++)
-		brushmodelnumbers[i] = -1;
-
 	nummapbrushsides = 0;
 	num_entities = 0;
 
@@ -616,16 +598,3 @@ void Q3_LoadMapFromBSP(struct quakefile_s *qf) {
 		Log_Print("\n");
 	} //end for*/
 } // end of the function Q3_LoadMapFromBSP
-//===========================================================================
-//
-// Parameter:			-
-// Returns:				-
-// Changes Globals:		-
-//===========================================================================
-void Q3_ResetMapLoading(void) {
-	// reset for map loading from bsp
-	memset(nodestack, 0, NODESTACKSIZE * sizeof(int));
-	nodestackptr = NULL;
-	nodestacksize = 0;
-	memset(brushmodelnumbers, 0, MAX_MAPFILE_BRUSHES * sizeof(int));
-} // end of the function Q3_ResetMapLoading

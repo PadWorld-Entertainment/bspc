@@ -33,7 +33,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "l_threads.h"
 #include "botlib/l_script.h"
 #include "l_bsp_ent.h"
-#include "q2files.h"
 #include "l_mem.h"
 #include "l_utils.h"
 #include "l_log.h"
@@ -257,21 +256,8 @@ typedef struct {
 } map_texinfo_t;
 
 extern map_texinfo_t map_texinfo[MAX_MAPFILE_TEXINFO];
-extern int map_numtexinfo;
-#define NODESTACKSIZE 1024
 
-#define MAPTYPE_QUAKE1 1
-#define MAPTYPE_QUAKE2 2
 #define MAPTYPE_QUAKE3 3
-#define MAPTYPE_HALFLIFE 4
-#define MAPTYPE_SIN 5
-
-extern int nodestack[NODESTACKSIZE];
-extern int *nodestackptr;
-extern int nodestacksize;
-extern int brushmodelnumbers[MAX_MAPFILE_BRUSHES];
-extern int dbrushleafnums[MAX_MAPFILE_BRUSHES];
-extern int dplanes2mapplanes[MAX_MAPFILE_PLANES];
 
 extern int loadedmaptype;
 #endif // ME
@@ -306,51 +292,10 @@ void PrintMapInfo(void);
 void WriteMapFile(char *filename);
 
 //=============================================================================
-// map_q2.c
-//=============================================================================
-
-void Q2_ResetMapLoading(void);
-// loads a Quake2 map file
-void Q2_LoadMapFile(char *filename);
-// loads a map from a Quake2 bsp file
-void Q2_LoadMapFromBSP(char *filename, int offset, int length);
-
-//=============================================================================
-// map_q1.c
-//=============================================================================
-
-void Q1_ResetMapLoading(void);
-// loads a Quake2 map file
-void Q1_LoadMapFile(char *filename);
-// loads a map from a Quake1 bsp file
-void Q1_LoadMapFromBSP(char *filename, int offset, int length);
-
-//=============================================================================
 // map_q3.c
 //=============================================================================
-void Q3_ResetMapLoading(void);
 // loads a map from a Quake3 bsp file
 void Q3_LoadMapFromBSP(struct quakefile_s *qf);
-
-//=============================================================================
-// map_sin.c
-//=============================================================================
-
-void Sin_ResetMapLoading(void);
-// loads a Sin map file
-void Sin_LoadMapFile(char *filename);
-// loads a map from a Sin bsp file
-void Sin_LoadMapFromBSP(char *filename, int offset, int length);
-
-//=============================================================================
-// map_hl.c
-//=============================================================================
-
-void HL_ResetMapLoading(void);
-// loads a Half-Life map file
-void HL_LoadMapFile(char *filename);
-// loads a map from a Half-Life bsp file
-void HL_LoadMapFromBSP(char *filename, int offset, int length);
 
 //=============================================================================
 // textures.c
@@ -369,7 +314,6 @@ typedef struct {
 extern textureref_t textureref[MAX_MAP_TEXTURES];
 
 int FindMiptex(char *name);
-int TexinfoForBrushTexture(plane_t *plane, brush_texture_t *bt, vec3_t origin);
 void TextureAxisFromPlane(plane_t *pln, vec3_t xv, vec3_t yv);
 
 //=============================================================================

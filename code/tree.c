@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "qbsp.h"
+#include "qfiles.h"
 
 extern int c_nodes;
 int c_pruned;
