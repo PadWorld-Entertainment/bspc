@@ -4753,13 +4753,13 @@ int AAS_ContinueInitReachability(float time) {
 			} // end if
 			AAS_Reachability_WalkOffLedge(i);
 		} // end for
-		// create jump pad reachabilities
+		botimport.Print(PRT_MESSAGE, "create jump pad reachabilities\n");
 		AAS_Reachability_JumpPad();
-		// create teleporter reachabilities
+		botimport.Print(PRT_MESSAGE, "create teleporter reachabilities\n");
 		AAS_Reachability_Teleport();
-		// create elevator (func_plat) reachabilities
+		botimport.Print(PRT_MESSAGE, "create elevator (func_plat) reachabilities\n");
 		AAS_Reachability_Elevator();
-		// create func_bobbing reachabilities
+		botimport.Print(PRT_MESSAGE, "create func_bobbing reachabilities\n");
 		AAS_Reachability_FuncBobbing();
 		//
 #ifdef DEBUG
@@ -4782,7 +4782,9 @@ int AAS_ContinueInitReachability(float time) {
 		//*/
 		// store all the reachabilities
 
+		botimport.Print(PRT_MESSAGE, "read custom reaches...\n");
 		AAS_ReadCustomReaches(); // cyr
+		botimport.Print(PRT_MESSAGE, "store reachability...\n");
 		AAS_StoreReachability();
 		// free the reachability link heap
 		AAS_ShutDownReachabilityHeap();

@@ -115,8 +115,8 @@ ifeq ($(PLATFORM),darwin)
   CFLAGS += -DHAVE_ARC4RANDOM -DLINUX
 endif
 
-RELEASE_CFLAGS=-O3 -ffast-math
-DEBUG_CFLAGS=-g -O0 -ffast-math
+RELEASE_CFLAGS=-O3 -ffast-math -DNDEBUG
+DEBUG_CFLAGS=-g -O0 -ffast-math -DDEBUG
 LDFLAGS=-lm -lpthread -fno-common $(EXPAT_LIBS)
 
 DO_CC=$(CC) $(CFLAGS) -o $@ -c $<

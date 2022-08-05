@@ -1065,7 +1065,7 @@ void AAS_Create(char *aasfile) {
 		AAS_FreeTmpAAS();
 		return;
 	} // end if
-	// store the created AAS stuff in the AAS file format and write the file
+	Log_Print("store the created AAS stuff in the AAS file format and write the file\n");
 	AAS_StoreFile(aasfile);
 	// free the temporary AAS memory
 	AAS_FreeTmpAAS();
