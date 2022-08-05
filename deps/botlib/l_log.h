@@ -29,6 +29,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *****************************************************************************/
 
+#ifndef __GNUC__
+#define __attribute__(x)
+#endif
+
 // open a log file
 void Log_Open(const char *filename);
 // close the current log file
