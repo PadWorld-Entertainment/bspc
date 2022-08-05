@@ -41,7 +41,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define BSPC_VERSION "2.1h"
 
 #define ME
-#define DEBUG
 #define NODELIST
 #define SIN
 
