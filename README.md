@@ -1,6 +1,7 @@
 # bspc
 
 This is the [WorldOfPadman](https://github.com/PadWorld-Entertainment/worldofpadman) BSP-to-AAS compiler.
+Discontinued and archived due to its integration into the [World of PADMAN game repository](https://github.com/PadWorld-Entertainment/worldofpadman).
 
 ## Downloading
 
